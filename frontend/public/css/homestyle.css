@@ -1,0 +1,56 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+.home {
+  
+  background-image: url('../images/background1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  font-family: 'Nunito', sans-serif;
+  color: white;
+  text-align: center;
+padding-top: 10px; /* use padding instead of margin */
+  margin-top: 0; 
+  height: 100vh; /* to prevent overflow */
+}
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: black;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030; /* higher than most elements */
+ 
+}
+
+
+.nav-centre {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1; /* take up remaining space */
+  gap: 10px;
+  font-size: 1.2rem;
+}
