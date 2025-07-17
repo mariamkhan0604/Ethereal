@@ -1,12 +1,11 @@
-// seeds/seedProducts.js
-
 const mongoose = require("mongoose");
 const Product = require("../models/Product");
 const Category = require("../models/Category");
 const productsData = require("./products");
+require("dotenv").config();
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/ethereal") // Adjust DB name if needed
+  .connect(process.env.DATABASE_URL) // from .env file
   .then(() => {
     console.log("DB connected");
     return seedProducts();
