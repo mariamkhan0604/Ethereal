@@ -1,0 +1,114 @@
+.contact-us {
+  padding: 6rem 3rem;
+  background-color: #fef8f5;
+  font-family: 'Raleway', sans-serif;
+}
+.contact_wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 40px;
+  padding: 2rem;
+}
+.contact-us-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.contact-form,
+.contact-info {
+  flex: 1;
+  min-width: 320px;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+}
+
+/* Contact Form Styles */
+.contact-form {
+  max-width: 600px;
+}
+
+.contact-form h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #8b5e3c;
+  margin-bottom: 1.5rem;
+}
+
+.contact-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 0.9rem 1.2rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+.contact-form button {
+  align-self: flex-start;
+  width: 120px;
+  font-size: 1rem;
+  height: 50px;
+  background-color: #8b5e3c;
+  color: white;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.contact-form button:hover {
+  background-color: #a66b44;
+}
+
+/* Contact Info Card */
+.contact-info {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.contact-info h3 {
+  font-size: 1.8rem;
+  color: #8b5e3c;
+  margin-bottom: 1rem;
+}
+
+.contact-info p {
+  font-size: 1rem;
+  color: #555;
+  margin: 0.5rem 0;
+}
+
+.social-icons {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 15px;
+}
+
+.social-icons img {
+  width: 35px;
+  height: 35px;
+  transition: transform 0.3s ease;
+}
+
+.social-icons img:hover {
+  transform: scale(1.1);
+}
