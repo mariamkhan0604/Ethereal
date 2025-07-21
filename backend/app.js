@@ -11,10 +11,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 console.log("MongoDB URL:", process.env.DATABASE_URL); // Debug line
 
-mongoose.connect(process.env.DATABASE_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(process.env.DATABASE_URL)
 .then(() => console.log("Connected to MongoDB", mongoose.connection.host))
 .catch(err => {
   console.error("MongoDB connection failed:");
