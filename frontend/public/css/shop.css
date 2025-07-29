@@ -4,7 +4,7 @@ html, body {
 }
 
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Raleway', sans-serif;
   background-color: #f8f8f8;
   display: flex;
   flex-direction: column;
@@ -21,10 +21,10 @@ body {
 
 main {
   flex: 1;
-   padding-top: 100px; 
-  padding-bottom: 30px; 
-  padding-left: 0; 
-  padding-right: 0; 
+  padding-top: 100px;
+  padding-bottom: 30px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .container {
@@ -132,4 +132,207 @@ main {
 
 .add-to-cart-btn.theme-button i {
   font-size: 16px;
+}
+
+#activeFiltersContainer {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  background-color: op;
+}
+
+.filter-tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(210, 180, 140, 0.3);
+  border: 1px solid rgba(139, 94, 60, 0.2);
+  border-radius: 20px;
+  padding: 8px 15px;
+  font-size: 0.9rem;
+  color: #333;
+  white-space: nowrap;
+}
+
+.filter-tag .clear-tag {
+  margin-left: 10px;
+  background: none;
+  border: none;
+  color: #777;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.filter-tag .clear-tag:hover {
+  color: #000;
+}
+
+.product-card {
+  width: 100%;
+  max-width: none;
+  margin-bottom: 20px;
+}
+
+.form-check-input.category-checkbox {
+  position: absolute;
+  opacity: 0;
+  z-index: -1;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.form-check-label {
+  position: relative;
+  padding-left: 25px;
+  cursor: pointer;
+  line-height: 1.25;
+  user-select: none;
+  display: inline-block;
+}
+
+.form-check-label::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 2px;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #8b5e3c;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-check-label::after {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 5px;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.form-check-input.category-checkbox:checked + .form-check-label::before {
+  background-color: #8b5e3c;
+  border-color: #8b5e3c;
+}
+
+.form-check-input.category-checkbox:checked + .form-check-label::after {
+  opacity: 1;
+}
+
+.form-check-label:hover::before {
+  border-color: #a66b44;
+}
+
+.form-check-input.category-checkbox:focus + .form-check-label::before {
+  box-shadow: 0 0 0 0.2rem rgba(139, 94, 60, 0.25);
+}
+
+h1.text-center.mb-4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 4.5rem;
+  font-weight: 100;
+  color: transparent;
+  -webkit-text-stroke: 1px #333;
+  text-stroke: 1px #333;
+  letter-spacing: 5px;
+  line-height: 1.2;
+  margin-top: 1.5rem;
+  text-align: center;
+  text-shadow: none;
+}
+
+.changeColor {
+  width: 120px;
+  font-size: 1rem;
+  height: 50px;
+  background-color: #8b5e3c;
+  color: white;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.changeColor:hover {
+  background-color: #a66b44;
+}
+
+.filter-section {
+  background: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1rem;
+}
+
+#priceSlider {
+  margin: 1rem 0;
+}
+
+.price-labels {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #333;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.shop-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.filters-sidebar {
+  flex: 0 0 15%;
+  max-width: 15%;
+  padding-right: 15px;
+}
+
+.products-main {
+  flex: 0 0 85%;
+  max-width: 85%;
+  padding-left: 15px;
+}
+
+.container {
+  max-width: 90vw;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    max-width: 95%;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .container {
+    max-width: 100%;
+  }
+
+  .filters-sidebar {
+    display: none !important;
+  }
+
+  .products-main {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }

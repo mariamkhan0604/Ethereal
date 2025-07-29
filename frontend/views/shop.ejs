@@ -1,52 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Shop Page</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <%- include('partials/header') %>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/frontend/public/css/shop.css">
+    <meta charset="UTF-8" />
+    <title>Shop Page</title>
+    <link
+        rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <%- include('partials/header') %>
+    <script
+        src="https://kit.fontawesome.com/a076d05399.js"
+        crossorigin="anonymous"
+    ></script>
+      <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css"
+    />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;400;600&family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/public/css/shop.css" />
+  
+    <style>
+        .noUi-tooltip {
+            display: none !important;
+        }
 
-  <style>
-   
-  </style>
+        .noUi-target {
+            background: #e0e0e0;
+            border-radius: 1rem;
+            border: none;
+            height: 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .noUi-connect {
+            background: #8b5e3c;
+        }
+
+        .noUi-horizontal .noUi-handle {
+            width: 18px;
+            height: 18px;
+            top: -5px;
+            background: white;
+            border: 2px solid brown;
+            border-radius: 50%;
+            cursor: grab;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .noUi-handle::before,
+        .noUi-handle::after {
+            display: none !important;
+        }
+
+        
+     
+    
+    </style>
 </head>
 <body>
-  <div class="page-wrapper">
-    <%- include('partials/navbar') %>
+    <div class="page-wrapper">
+        <%- include('partials/navbar') %>
 
-    <main>
-      <div class="container mt-4">
-        <h1 class="text-center mb-4">Shop All Products</h1>
-        <div class="row">
-          <% products.forEach(product => { %>
-            <div class="col-sm-6 col-md-4 d-flex justify-content-center">
-              <div class="product-card">
-                <img src="<%= product.image %>" alt="<%= product.name %>">
-                <div class="card-body">
-                  <div class="product-name"><%= product.name %></div>
-                  <p class="text-muted"><%= product.description %></p>
-                  <div class="product-price">₹<%= product.price %></div>
-                </div>
-                <button class="add-to-cart-btn theme-button">
-                  <i class="fas fa-shopping-bag"></i> <span>Add to Cart</span>
-                </button>
-              </div>
-            </div>
-          <% }) %>
+        <main>
+            <div class="container mt-4">
+                <h1 class="text-center mb-4">Shop All Products</h1>
+
+                <div id="activeFiltersContainer">
+                    </div>
+
+                <div class="shop-content">
+                    <div class="filters-sidebar">
+                        <div class="filter-section">
+                            <h4 class="mb-3">Price</h4>
+                            <form id="sliderFilterForm" action="/shop" method="GET">
+                                <div id="priceSlider" class="mb-3"></div>
+
+                                <div class="price-labels">
+                                    <div>
+                                        ₹<span id="sliderMinValue"
+                                            ><%= typeof minPrice !== 'undefined' ? minPrice : 0
+                                            %></span
+                                        >
+                                    </div>
+                                    <div>
+                                        ₹<span id="sliderMaxValue"
+                                            ><%= typeof maxPrice !== 'undefined' ? maxPrice : 5000
+                                            %></span
+                                        >
+                                    </div>
+                                </div>
+
+                                <input
+                                    type="hidden"
+                                    id="minPriceInput"
+                                    name="minPrice"
+                                    value="<%= typeof minPrice !== 'undefined' ? minPrice : 0 %>"
+                                />
+                                <input
+                                    type="hidden"
+                                    id="maxPriceInput"
+                                    name="maxPrice"
+                                    value="<%= typeof maxPrice !== 'undefined' ? maxPrice : 5000 %>"
+                                />
+
+                                </form>
+                        </div>
+
+                        <div class="filter-section mt-4">
+    <h4 class="mb-3">Category</h4>
+    <form id="categoryFilterForm">
+        <div class="form-group">
+            <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                <% categories.forEach((category, index) => { %>
+                    <div class="form-check">
+                        <input
+                            class="form-check-input category-checkbox"
+                            type="checkbox"
+                            id="category<%= index %>"
+                            name="category"
+                            value="<%= category %>"
+                            <%= (typeof selectedCategories !== 'undefined' && selectedCategories.includes(category)) ? 'checked' : '' %>
+                        >
+                        <label class="form-check-label" for="category<%= index %>"><%= category %></label>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="text-muted">No categories available.</p>
+            <% } %>
         </div>
-      </div>
-    </main>
+    </form>
+</div>
+                    </div>
 
-    <%- include('partials/footer') %>
-  </div>
+                    <div class="products-main">
+                        <div class="row">
+                            <% products.forEach(product => { %>
+                                <div
+                                    class="col-6 col-md-4 col-lg-3 d-flex justify-content-center"
+                                >
+                                    <div class="product-card">
+                                        <img src="<%= product.image %>" alt="<%= product.name %>" />
+                                        <div class="card-body">
+                                            <div class="product-name"><%= product.name %></div>
+                                            <p class="text-muted"><%= product.description %></p>
+                                            <div class="product-price">₹<%= product.price %></div>
+                                        </div>
+                                        <button class="add-to-cart-btn theme-button">
+                                            <i class="fas fa-shopping-bag"></i>
+                                            <span>Add to Cart</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <%- include('partials/footer') %>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
+
     <script>
-  document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      alert("Product added to cart!");
-    });
-  });
-</script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Helper Functions ---
+            function getUrlParams() {
+                const params = {};
+                const urlSearchParams = new URLSearchParams(window.location.search);
+
+                // Get all regular parameters (like minPrice, maxPrice)
+                for (const [key, value] of urlSearchParams.entries()) {
+                    if (!params[key]) {
+                        params[key] = value;
+                    } else if (Array.isArray(params[key])) {
+                        params[key].push(value);
+                    } else {
+                        params[key] = [params[key], value];
+                    }
+                }
+
+                // Specifically get all 'category' parameters as an array
+                params.category = urlSearchParams.getAll('category');
+
+                return params;
+            }
+
+            function updateUrlParams(newParams) {
+                const url = new URL(window.location.href);
+                let changed = false;
+                const currentSearchParams = new URLSearchParams(url.search);
+
+                for (const key in newParams) {
+                    const newValue = newParams[key];
+
+                    if (Array.isArray(newValue)) {
+                        // Handle array parameters (like categories)
+                        const currentValues = currentSearchParams.getAll(key);
+                        const newValuesSet = new Set(newValue.map(String)); // Convert to string for comparison
+
+                        // Check if parameters actually changed for arrays
+                        if (currentValues.length !== newValuesSet.size || !currentValues.every(val => newValuesSet.has(val))) {
+                            currentSearchParams.delete(key); // Remove all existing
+                            newValue.forEach(val => currentSearchParams.append(key, val)); // Add new ones
+                            changed = true;
+                        }
+                    } else {
+                        // Handle single value parameters (like minPrice, maxPrice)
+                        const currentValue = currentSearchParams.get(key);
+                        if (newValue === null || newValue === undefined || newValue === '') {
+                            if (currentValue !== null) {
+                                currentSearchParams.delete(key);
+                                changed = true;
+                            }
+                        } else {
+                            const newStringValue = String(newValue);
+                            if (currentValue !== newStringValue) {
+                                currentSearchParams.set(key, newStringValue);
+                                changed = true;
+                            }
+                        }
+                    }
+                }
+
+                url.search = currentSearchParams.toString();
+                if (changed) {
+                    window.location.href = url.toString(); // Navigates to the new URL
+                }
+            }
+
+            // --- Elements ---
+            const slider = document.getElementById('priceSlider');
+            const minDisplay = document.getElementById('sliderMinValue');
+            const maxDisplay = document.getElementById('sliderMaxValue');
+            const minInput = document.getElementById('minPriceInput');
+            const maxInput = document.getElementById('maxPriceInput');
+            const activeFiltersContainer = document.getElementById('activeFiltersContainer');
+            const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+
+            // --- Constants for filter logic ---
+            const DEFAULT_MIN_PRICE = 0;
+            const DEFAULT_MAX_PRICE = 5000;
+
+            // --- Add to cart alert functionality ---
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', function () {
+                    alert("Product added to cart!");
+                });
+            });
+
+            // --- noUiSlider setup ---
+            if (slider) {
+                const urlParams = getUrlParams();
+                const initialMinPrice = parseFloat(urlParams.minPrice) || DEFAULT_MIN_PRICE;
+                const initialMaxPrice = parseFloat(urlParams.maxPrice) || DEFAULT_MAX_PRICE;
+
+                minInput.value = initialMinPrice;
+                maxInput.value = initialMaxPrice;
+
+                noUiSlider.create(slider, {
+                    start: [initialMinPrice, initialMaxPrice],
+                    connect: true,
+                    step: 50,
+                    tooltips: false,
+                    range: {
+                        'min': DEFAULT_MIN_PRICE,
+                        'max': DEFAULT_MAX_PRICE
+                    },
+                    format: {
+                        to: function (value) {
+                            return '₹' + Math.round(value);
+                        },
+                        from: function (value) {
+                            return Number(value.replace(/[^\d.]/g, ''));
+                        }
+                    }
+                });
+
+                slider.noUiSlider.on('update', function (values, handle) {
+                    const rawMinValue = Number(values[0].replace(/[^\d.]/g, ''));
+                    const rawMaxValue = Number(values[1].replace(/[^\d.]/g, ''));
+
+                    minDisplay.textContent = Math.round(rawMinValue);
+                    maxDisplay.textContent = Math.round(rawMaxValue);
+
+                    minInput.value = Math.round(rawMinValue);
+                    maxInput.value = Math.round(rawMaxValue);
+                });
+
+                slider.noUiSlider.on('change', function (values, handle) {
+                    const currentMin = Math.round(Number(values[0].replace(/[^\d.]/g, '')));
+                    const currentMax = Math.round(Number(values[1].replace(/[^\d.]/g, '')));
+                    
+                    const urlParams = getUrlParams();
+                    updateUrlParams({ ...urlParams, minPrice: currentMin, maxPrice: currentMax });
+                });
+
+            } else {
+                console.error("Error: Price slider element (id='priceSlider') not found in the DOM.");
+            }
+
+            // --- Category Filter Logic ---
+            if (categoryCheckboxes.length > 0) {
+                const urlParams = getUrlParams();
+                const activeCategories = urlParams.category || [];
+
+                // Initialize checkboxes based on URL params
+                categoryCheckboxes.forEach(checkbox => {
+                    if (activeCategories.includes(checkbox.value)) {
+                        checkbox.checked = true;
+                    }
+
+                    checkbox.addEventListener('change', function() {
+                        const currentlyCheckedCategories = Array.from(categoryCheckboxes)
+                                                            .filter(cb => cb.checked)
+                                                            .map(cb => cb.value);
+                        const currentParams = getUrlParams();
+                        updateUrlParams({ ...currentParams, category: currentlyCheckedCategories });
+                    });
+                });
+            }
+
+
+            // --- Filter Tag Logic ---
+            function createPriceFilterTag(min, max) {
+                const tag = document.createElement('div');
+                tag.classList.add('filter-tag');
+                tag.setAttribute('data-filter-type', 'price');
+                tag.setAttribute('data-min-price', min);
+                tag.setAttribute('data-max-price', max);
+
+                tag.innerHTML = `
+                    Rs. ${min} To Rs. ${max}
+                    <button type="button" class="clear-tag" aria-label="Clear price filter">
+                        &times;
+                    </button>
+                `;
+
+                tag.querySelector('.clear-tag').addEventListener('click', function() {
+                    const currentParams = getUrlParams();
+                    updateUrlParams({ ...currentParams, minPrice: null, maxPrice: null });
+                });
+
+                activeFiltersContainer.appendChild(tag);
+            }
+
+            function createCategoryFilterTag(category) {
+                const tag = document.createElement('div');
+                tag.classList.add('filter-tag');
+                tag.setAttribute('data-filter-type', 'category');
+                tag.setAttribute('data-category-value', category);
+
+                tag.innerHTML = `
+                    Category: ${category}
+                    <button type="button" class="clear-tag" aria-label="Clear category filter for ${category}">
+                        &times;
+                    </button>
+                `;
+
+                tag.querySelector('.clear-tag').addEventListener('click', function() {
+                    const currentParams = getUrlParams();
+                    const updatedCategories = (currentParams.category || []).filter(cat => cat !== category);
+                    updateUrlParams({ ...currentParams, category: updatedCategories });
+                });
+
+                activeFiltersContainer.appendChild(tag);
+            }
+
+            function renderActiveFilters() {
+                activeFiltersContainer.innerHTML = ''; // Clear existing tags
+
+                const urlParams = getUrlParams();
+
+                // Render Price Filter Tag
+                const minPrice = parseFloat(urlParams.minPrice);
+                const maxPrice = parseFloat(urlParams.maxPrice);
+                if (!isNaN(minPrice) && !isNaN(maxPrice) &&
+                    (minPrice !== DEFAULT_MIN_PRICE || maxPrice !== DEFAULT_MAX_PRICE)) {
+                    createPriceFilterTag(Math.round(minPrice), Math.round(maxPrice));
+                }
+
+                // Render Category Filter Tags
+                const activeCategories = urlParams.category || [];
+                activeCategories.forEach(category => {
+                    createCategoryFilterTag(category);
+                });
+            }
+
+            // Initial render of filters on page load
+            renderActiveFilters();
+
+            // Initial rendering of min/max values in display spans on page load
+            const urlParamsOnLoad = getUrlParams();
+            const initialMinFromURL = parseFloat(urlParamsOnLoad.minPrice);
+            const initialMaxFromURL = parseFloat(urlParamsOnLoad.maxPrice);
+
+            minDisplay.textContent = !isNaN(initialMinFromURL) ? Math.round(initialMinFromURL) : DEFAULT_MIN_PRICE;
+            maxDisplay.textContent = !isNaN(initialMaxFromURL) ? Math.round(initialMaxFromURL) : DEFAULT_MAX_PRICE;
+        });
+    </script>
 </body>
 </html>
