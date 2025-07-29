@@ -1,0 +1,76 @@
+<% layout('layout') -%>
+
+<section class="checkout">
+  <div class="checkout-tab">
+    <h1 class="checkout-title">
+      🛒 Checkout
+      <span class="checkout-subtitle"
+        >Please review your order before proceeding</span
+      >
+    </h1>
+
+    <% if (cart && cart.length > 0) { %>
+    <div class="cart-summary">
+      <h2>Order Summary</h2>
+      <ul>
+        <% cart.forEach(item => { %>
+        <li>
+          <strong><%= item.name %></strong> × <%= item.quantity %> = ₹<%=
+          item.quantity * item.unit_price %>
+        </li>
+        <% }) %>
+      </ul>
+      <h3>Total: ₹<%= totalPrice %></h3>
+    </div>
+    <% } else { %>
+    <p class="empty-cart">
+      Your cart is empty. Please add items to your cart before proceeding to
+      checkout.
+    </p>
+    <% } %>
+  </div>
+  <% if (cart && cart.length > 0) { %>
+  <form action="/placeOrder" method="POST" class="checkout-form">
+    <h2>📦 Shipping Details</h2>
+
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input type="text" name="fullName" id="fullName" required />
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <textarea name="address" id="address" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="city">City</label>
+      <input type="text" name="city" id="city" required />
+    </div>
+
+    <div class="form-group">
+      <label for="pincode">Pincode</label>
+      <input type="text" name="pincode" id="pincode" required />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" name="email" id="email" required />
+    </div>
+
+    <h2>💳 Payment Method</h2>
+    <div class="form-group">
+      <label for="payment">Choose a Payment Method:</label>
+      <select name="payment" id="payment" required>
+        <option value="">--Select--</option>
+        <option value="cod">Cash on Delivery</option>
+        <option value="upi">UPI</option>
+        <option value="card">Credit/Debit Card</option>
+        <option value="netbanking">Net Banking</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Place Order</button>
+  </form>
+  <% } %>
+</section>

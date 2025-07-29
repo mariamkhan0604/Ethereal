@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -14,119 +14,68 @@ const ExpressError = require('./utils/ExpressError');
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+// Database connection
 console.log("MongoDB URL:", process.env.DATABASE_URL); // Debug line
 
-mongoose.connect(process.env.DATABASE_URL)
-.then(() => console.log("Connected to MongoDB", mongoose.connection.host))
-.catch(err => {
-  console.error("MongoDB connection failed:");
-  console.error(err.message); // cleaner output
-  process.exit(1); // Optional: Exit app on DB failure
-});
+mongoose
+  .connect(process.env.DATABASE_URL)
+  .then(() => console.log("Connected to MongoDB", mongoose.connection.host))
+  .catch((err) => {
+    console.error("MongoDB connection failed:");
+    console.error(err.message); // cleaner output
+    process.exit(1); // Optional: Exit app on DB failure
+  });
 
+// View engine setup
 app.engine("ejs", engine);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "../frontend/views"));
 app.use(express.static(path.join(__dirname, "../frontend/public")));
 
+//session
 const sessionConfig = {
-  secret: process.env.SESSION_SECRET ,
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
-    mongoUrl: process.env.DATABASE_URL
+    mongoUrl: process.env.DATABASE_URL,
   }),
   cookie: {
     httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-  }
+  },
 };
 app.use(session(sessionConfig));
 app.use(flash());
 app.use((req, res, next) => {
-  res.locals.currentUser = req.session.user ;
-  res.locals.success=req.flash('success');
-  res.locals.error=req.flash('error');
+  res.locals.currentUser = req.session.user;
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
   next();
 });
-const authRoutes = require('./routes/auth');
-app.use('/auth', authRoutes); 
-app.get("/", (req, res) => {
-  res.render("home");
-});
-
-app.get("/about", (req, res) => {
-  res.render("about");
-});
-
-app.get("/contact", (req, res) => {
-  res.render("contact");
-});
-
-app.get('/shop', async (req, res, next) => {
-    try {
-        const minPrice = parseFloat(req.query.minPrice) || 0;
-        const maxPrice = parseFloat(req.query.maxPrice) || 5000; 
-
-        const frontendSelectedCategoryNames = req.query.category
-            ? (Array.isArray(req.query.category) ? req.query.category : [req.query.category])
-            : [];
-
+const mainRoutes = require("./routes/main_routes");
+const authRoutes = require("./routes/auth");
+const cartRoutes = require("./routes/cart");
+//route setup
+app.use("/", mainRoutes);
+app.use("/auth", authRoutes);
+app.use("/", cartRoutes);
+// app.get('/shop', async (req, res, next) => {
     
-        const allCategoriesInDb = await Category.find({}); 
+// });
+// //Routes
 
-    
-        const categoryNameToIdMap = {};
-        for (const cat of allCategoriesInDb) {
-            categoryNameToIdMap[cat.name] = cat._id;
-        }
-
-      
-        const backendSelectedCategoryIds = frontendSelectedCategoryNames
-            .map(name => categoryNameToIdMap[name]) 
-            .filter(id => id); 
-
-     
-        let filter = {};
-
-  
-        filter.price = {
-            $gte: minPrice,
-            $lte: maxPrice
-        };
-
-     
-        if (backendSelectedCategoryIds.length > 0) {
-            filter.category = { $in: backendSelectedCategoryIds };
-        }
-
-        const products = await Product.find(filter);
-
-      
-        res.render('shop', {
-            products: products,
-            minPrice: minPrice,
-            maxPrice: maxPrice,
-            categories: allCategoriesInDb.map(cat => cat.name), 
-            selectedCategories: frontendSelectedCategoryNames 
-        });
-
-    } catch (e) {
-        console.error("Error in /shop route:", e);
-        next(e);
-    }
-});
 
 app.all(/(.*)/, (req, res, next) => {
-    next(new ExpressError('Page Not Found', 404))
-})
+  next(new ExpressError("Page Not Found", 404));
+});
 
-app.use((err,req,res,next)=>{
-    const {statusCode=500}=err;
-    if(!err.message) err.message="Something went wrong";
-    // res.status(statusCode).render('error',{err})
-    res.send(err.message);
-})
+app.use((err, req, res, next) => {
+  const { statusCode = 500 } = err;
+  if (!err.message) err.message = "Something went wrong";
+  // res.status(statusCode).render('error',{err})
+  res.send(err.message);
+});
 
 const port = 3000;
 app.listen(port, "0.0.0.0", () => {
