@@ -1,0 +1,78 @@
+.checkout-tab {
+  padding: 40px;
+  background: #fefefe;
+  border-radius: 12px;
+  font-family: 'Raleway', sans-serif;
+}
+
+.checkout-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.checkout-subtitle {
+  font-size: 1rem;
+  color: #666;
+}
+
+.cart-summary {
+  background-color: #f4f7fa;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.cart-summary ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.cart-summary li {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.checkout-form {
+  background: #f9f9f9;
+  padding: 25px;
+  border-radius: 12px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.btn-success {
+  padding: 12px 25px;
+  font-size: 1.1rem;
+  background-color: #28a745;
+  border: none;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}

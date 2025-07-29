@@ -1,0 +1,36 @@
+.order-success {
+  padding: 60px;
+  text-align: center;
+  font-family: 'Raleway', sans-serif;
+}
+
+.success-container {
+  background: #e6fff2;
+  padding: 40px;
+  border-radius: 12px;
+}
+
+.success-container h1 {
+  font-size: 2.5rem;
+  color: #2e7d32;
+}
+
+.success-container p {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+.success-container .btn-primary {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.success-container .btn-primary:hover {
+  background-color: #0056b3;
+}

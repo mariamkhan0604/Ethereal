@@ -1,0 +1,44 @@
+<% layout('layout') -%>
+
+<section>
+  <div class="cart-tab">
+    <h1 class="cart-title">🛒Your Cart</h1>
+
+    <div class="cart_items">
+     
+
+<% if (cart && cart.length > 0) { %>
+  <ul>
+    <% cart.forEach(item => { %>
+      <li>
+        <img src="<%= item.image %>" alt="<%= item.name %>" width="50" />
+        <strong><%= item.name %></strong><br>
+        ₹<%= item.unit_price %> × <%= item.quantity %> = ₹<%= item.unit_price * item.quantity %>
+
+        <form action="/cart/update/<%= item.productId %>" method="post"  style="display:inline;">
+            <button type="submit" name="action"  value="decrease">-</button>
+            <button type="submit" name="action" value="increase">+</button>
+            <button type="submit" name="action" value="remove">Remove</button>
+        </form>
+      </li>
+    
+      <hr />
+    <% }) %>
+  </ul>
+  
+<% } else { %>
+  <p>Your cart is empty.</p>
+<% } %>
+
+
+    <div class="total-container">
+      <h4>Total:</h4>
+      <h4 class="cart-total">₹<%= totalPrice %></h4>
+    </div>
+
+    <div class="btn-container">
+      <a href="/shop" class="btn-closed">Close</a>
+      <a href="/checkout" class="btn-checkout">Checkout</a>
+    </div>
+  </div>
+</section>

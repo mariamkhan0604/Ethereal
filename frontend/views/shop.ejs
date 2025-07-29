@@ -1,52 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Shop Page</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <%- include('partials/header') %>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="/frontend/public/css/shop.css">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Shop Page</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <%- include('partials/header') %>
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="/frontend/public/css/shop.css" />
 
-  <style>
-   
-  </style>
-</head>
-<body>
-  <div class="page-wrapper">
-    <%- include('partials/navbar') %>
+    <style></style>
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <%- include('partials/navbar') %>
 
-    <main>
-      <div class="container mt-4">
-        <h1 class="text-center mb-4">Shop All Products</h1>
-        <div class="row">
-          <% products.forEach(product => { %>
+      <main>
+        <div class="container mt-4">
+          <h1 class="text-center mb-4">Shop All Products</h1>
+          <div class="row">
+            <% products.forEach(product => { %>
             <div class="col-sm-6 col-md-4 d-flex justify-content-center">
               <div class="product-card">
-                <img src="<%= product.image %>" alt="<%= product.name %>">
+                <img src="<%= product.image %>" alt="<%= product.name %>" />
                 <div class="card-body">
                   <div class="product-name"><%= product.name %></div>
                   <p class="text-muted"><%= product.description %></p>
                   <div class="product-price">₹<%= product.price %></div>
                 </div>
-                <button class="add-to-cart-btn theme-button">
-                  <i class="fas fa-shopping-bag"></i> <span>Add to Cart</span>
-                </button>
+                <form action="/add-to-cart" method="POST">
+                  <input
+                    type="hidden"
+                    name="productId"
+                    value="<%= product._id %>"
+                  />
+                  <button class="add-to-cart-btn theme-button">
+                    <i class="fas fa-shopping-bag"></i> <span>Add to Cart</span>
+                  </button>
+                </form>
               </div>
             </div>
-          <% }) %>
+            <% }) %>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
 
-    <%- include('partials/footer') %>
-  </div>
+      <%- include('partials/footer') %>
+    </div>
     <script>
-  document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      alert("Product added to cart!");
-    });
-  });
-</script>
-</body>
+      document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
+        button.addEventListener("click", function () {
+          alert("Product added to cart!");
+        });
+      });
+    </script>
+  </body>
 </html>
