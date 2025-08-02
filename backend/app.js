@@ -11,6 +11,9 @@ const Category = require('./models/Category');
 const user=require('./models/User');
 const flash=require('connect-flash');
 const ExpressError = require('./utils/ExpressError');
+const multer = require('multer');
+const { storage } = require('./cloudinary');
+const upload = multer({ storage });
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -64,6 +67,54 @@ app.use("/", cartRoutes);
     
 // });
 // //Routes
+app.get('/products/new', async (req, res) => {
+  try {
+    const categories = await Category.find({});
+    res.render('add', { categories });
+  } catch (err) {
+    console.error('Error fetching categories:', err);
+    res.status(500).send('Error fetching categories');
+  }
+});
+app.post('/products', upload.array('images'), async (req, res) => {
+  try {
+    const newProduct = new Product(req.body);
+
+    // Map the files to get their Cloudinary URLs and filenames
+    const images = req.files.map(file => ({ url: file.path, filename: file.filename }));
+    
+    // Add the image data to the product instance
+    newProduct.images = images;
+    
+    // Save the new product to the database
+    await newProduct.save();
+
+    console.log(newProduct);
+
+    req.flash('success', 'Successfully added new product!');
+    res.redirect(`/products/${newProduct._id}`);
+
+  } catch (err) {
+    console.error('Error creating new product:', err);
+    req.flash('error', `Error: ${err.message}`);
+    res.redirect('/products/new');
+  }
+});
+app.get("/", (req, res) => {
+  res.render('home', { currentPage: 'home' });
+});
+
+app.get("/about", (req, res) => {
+  res.render('about', { currentPage: 'about' });
+});
+
+app.get("/contact", (req, res) => {
+  res.render('contact', { currentPage: 'contact' });
+});
+app.get('/shop',async(req,res)=>{
+  const products = await Product.find({});
+  res.render('shop',{ products, currentPage: 'shop' });
+})
 
 
 app.all(/(.*)/, (req, res, next) => {

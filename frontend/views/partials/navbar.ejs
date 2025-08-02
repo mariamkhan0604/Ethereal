@@ -33,16 +33,16 @@
       <div class="nav-centre">
         <ul class="navbar-nav mx-auto mb-2 mb-lg-0 text-center">
           <li class="nav-item">
-            <a class="nav-link active" href="/">Home</a>
+            <a class="nav-link <% if (currentPage === 'home') { %>active<% } %>" href="/">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="/shop">Shop</a>
+            <a class="nav-link <% if (currentPage === 'shop') { %>active<% } %>" href="/shop">Shop</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="about">Our Story</a>
+            <a class="nav-link <% if (currentPage === 'about') { %>active<% } %>" href="about">Our Story</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="contact">Reach Us</a>
+            <a class="nav-link <% if (currentPage === 'contact') { %>active<% } %>" href="contact">Reach Us</a>
           </li>
         </ul>
       </div>
