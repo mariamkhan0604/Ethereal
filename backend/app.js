@@ -51,19 +51,19 @@ app.use((req, res, next) => {
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes); 
 app.get("/", (req, res) => {
-  res.render("home");
+  res.render('home', { currentPage: 'home' });
 });
 
 app.get("/about", (req, res) => {
-  res.render("about");
+  res.render('about', { currentPage: 'about' });
 });
 
 app.get("/contact", (req, res) => {
-  res.render("contact");
+  res.render('contact', { currentPage: 'contact' });
 });
 app.get('/shop',async(req,res)=>{
   const products = await Product.find({});
-  res.render('shop',{products});
+  res.render('shop',{ products, currentPage: 'shop' });
 })
 
 app.all(/(.*)/, (req, res, next) => {
