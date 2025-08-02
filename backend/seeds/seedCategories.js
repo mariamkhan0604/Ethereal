@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Category = require('../models/Category');
 const categories = require('./categories');
-require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 
 mongoose.connect(process.env.DATABASE_URL)
   .then(() => console.log("DB connected"))

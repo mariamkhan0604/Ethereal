@@ -66,15 +66,15 @@ app.use("/", cartRoutes);
 // app.get('/shop', async (req, res, next) => {
     
 // });
-// //Routes
-app.get('/products/new', async (req, res) => {
-  try {
-    const categories = await Category.find({});
-    res.render('add', { categories });
-  } catch (err) {
-    console.error('Error fetching categories:', err);
-    res.status(500).send('Error fetching categories');
-  }
+// // //Routes
+app.get('/products', async (req, res) => {
+  try {
+    const categories = await Category.find({});
+    res.render('add', { categories, currentPage: 'add' });
+  } catch (err) {
+    console.error('Error fetching categories:', err);
+   res.status(500).send('Error fetching categories');
+  }
 });
 app.post('/products', upload.array('images'), async (req, res) => {
   try {
@@ -100,21 +100,11 @@ app.post('/products', upload.array('images'), async (req, res) => {
     res.redirect('/products/new');
   }
 });
-app.get("/", (req, res) => {
-  res.render('home', { currentPage: 'home' });
-});
 
-app.get("/about", (req, res) => {
-  res.render('about', { currentPage: 'about' });
-});
-
-app.get("/contact", (req, res) => {
-  res.render('contact', { currentPage: 'contact' });
-});
-app.get('/shop',async(req,res)=>{
-  const products = await Product.find({});
-  res.render('shop',{ products, currentPage: 'shop' });
-})
+// app.get('/shop',async(req,res)=>{
+//   const products = await Product.find({});
+//   res.render('shop',{ products, currentPage: 'shop' });
+// })
 
 
 app.all(/(.*)/, (req, res, next) => {
