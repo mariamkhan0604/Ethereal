@@ -147,10 +147,17 @@
                                             <p class="text-muted"><%= product.description %></p>
                                             <div class="product-price">₹<%= product.price %></div>
                                         </div>
+                                        <form action="/add-to-cart" method="POST">
+                  <input
+                    type="hidden"
+                    name="productId"
+                    value="<%= product._id %>"
+                    />
                                         <button class="add-to-cart-btn theme-button">
                                             <i class="fas fa-shopping-bag"></i>
                                             <span>Add to Cart</span>
                                         </button>
+                                        </form>
                                     </div>
                                 </div>
                             <% }) %>
