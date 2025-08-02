@@ -23,7 +23,7 @@
           <% products.forEach(product => { %>
             <div class="col-sm-6 col-md-4 d-flex justify-content-center">
               <div class="product-card">
-                <img src="<%= product.image %>" alt="<%= product.name %>">
+                <img src="<%= product.images[0].url %>" alt="<%= product.name %>">
                 <div class="card-body">
                   <div class="product-name"><%= product.name %></div>
                   <p class="text-muted"><%= product.description %></p>
