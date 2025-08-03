@@ -40,17 +40,17 @@ router.post(
     }
     console.log("hello");
     const isValid = await bcrypt.compare(password, existingUser.password);
-
+ if (!isValid) {
+      req.flash("error", "Invalid email or password.");
+      return res.redirect("/auth/login");
+    }
     req.session.user = existingUser._id;
     console.log("Password is valid:", isValid);
     console.log("Redirecting to / with session user:", req.session.user);
     console.log("User from DB:", existingUser);
     console.log("Password entered:", password);
     console.log("Password stored:", existingUser.password);
-    if (!isValid) {
-      req.flash("error", "Invalid email or password.");
-      return res.redirect("/auth/login");
-    }
+   
     req.flash("success", `Welcome back, ${existingUser.firstName}!`);
     console.log("✅ Login successful:", existingUser.email);
     res.redirect("/");

@@ -45,7 +45,7 @@ const sessionConfig = {
   }),
   cookie: {
     httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+     maxAge: 1000 * 60 * 60,  // 7 days
   },
 };
 app.use(session(sessionConfig));
