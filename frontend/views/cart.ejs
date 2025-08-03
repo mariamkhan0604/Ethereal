@@ -11,7 +11,7 @@
   <ul>
     <% cart.forEach(item => { %>
       <li>
-        <img src="<%= item.image %>" alt="<%= item.name %>" width="50" />
+        <img src="<%= item.images[0].url %>" alt="<%= item.name %>" width="50" />
         <strong><%= item.name %></strong><br>
         ₹<%= item.unit_price %> × <%= item.quantity %> = ₹<%= item.unit_price * item.quantity %>
 

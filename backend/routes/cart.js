@@ -24,7 +24,7 @@ router.post("/add-to-cart", async (req, res) => {
     req.session.cart.push({
       productId: product._id.toString(),
       name: product.name,
-      image: product.image,
+      images: product.images,
       unit_price: product.price,
       quantity: 1,
     }); // Add new item
