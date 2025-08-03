@@ -14,6 +14,7 @@ const ExpressError = require("./utils/ExpressError");
 const multer = require("multer");
 const { storage } = require("./cloudinary");
 const upload = multer({ storage });
+const { isLoggedIn,isAdmin} = require('./utils/middleware');
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -70,7 +71,7 @@ app.use("/", wishlistRoutes);
 
 // });
 // // //Routes
-app.get("/products", async (req, res) => {
+app.get("/products",isLoggedIn,isAdmin,async (req, res) => {
   try {
     const categories = await Category.find({});
     res.render("add", { categories, currentPage: "add" });
@@ -79,7 +80,7 @@ app.get("/products", async (req, res) => {
     res.status(500).send("Error fetching categories");
   }
 });
-app.post("/products", upload.array("images"), async (req, res) => {
+app.post("/products",isLoggedIn,isAdmin,upload.array("images"), async (req, res) => {
   try {
     const newProduct = new Product(req.body);
 

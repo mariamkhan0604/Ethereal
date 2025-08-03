@@ -3,7 +3,7 @@ const router = express.Router();
 const Product = require("../models/Product.js");
 const Order = require("../models/Order.js");
 const { checkout } = require("./main_routes.js");
-const isLoggedIn = require('../utils/middleware.js');
+const {isLoggedIn}= require('../utils/middleware.js');
 
 // Add to Cart route
 router.post("/add-to-cart", async (req, res) => {

@@ -44,7 +44,10 @@ router.post(
       req.flash("error", "Invalid email or password.");
       return res.redirect("/auth/login");
     }
-    req.session.user = existingUser._id;
+    req.session.user = {
+  _id: existingUser._id,
+  isAdmin: existingUser.isAdmin
+  };
     console.log("Password is valid:", isValid);
     console.log("Redirecting to / with session user:", req.session.user);
     console.log("User from DB:", existingUser);
