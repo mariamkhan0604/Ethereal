@@ -6,13 +6,13 @@ const engine = require("ejs-mate");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const mongoose = require("mongoose");
-const Product=require('./models/Product');
-const Category = require('./models/Category');
-const user=require('./models/User');
-const flash=require('connect-flash');
-const ExpressError = require('./utils/ExpressError');
-const multer = require('multer');
-const { storage } = require('./cloudinary');
+const Product = require("./models/Product");
+const Category = require("./models/Category");
+const user = require("./models/User");
+const flash = require("connect-flash");
+const ExpressError = require("./utils/ExpressError");
+const multer = require("multer");
+const { storage } = require("./cloudinary");
 const upload = multer({ storage });
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -59,45 +59,50 @@ app.use((req, res, next) => {
 const mainRoutes = require("./routes/main_routes");
 const authRoutes = require("./routes/auth");
 const cartRoutes = require("./routes/cart");
+const wishlistRoutes = require("./routes/wishlist");
 //route setup
 app.use("/", mainRoutes);
 app.use("/auth", authRoutes);
 app.use("/", cartRoutes);
+app.use("/", wishlistRoutes);
+
 // app.get('/shop', async (req, res, next) => {
-    
+
 // });
 // // //Routes
-app.get('/products', async (req, res) => {
-  try {
-    const categories = await Category.find({});
-    res.render('add', { categories, currentPage: 'add' });
-  } catch (err) {
-    console.error('Error fetching categories:', err);
-   res.status(500).send('Error fetching categories');
-  }
+app.get("/products", async (req, res) => {
+  try {
+    const categories = await Category.find({});
+    res.render("add", { categories, currentPage: "add" });
+  } catch (err) {
+    console.error("Error fetching categories:", err);
+    res.status(500).send("Error fetching categories");
+  }
 });
-app.post('/products', upload.array('images'), async (req, res) => {
+app.post("/products", upload.array("images"), async (req, res) => {
   try {
     const newProduct = new Product(req.body);
 
     // Map the files to get their Cloudinary URLs and filenames
-    const images = req.files.map(file => ({ url: file.path, filename: file.filename }));
-    
+    const images = req.files.map((file) => ({
+      url: file.path,
+      filename: file.filename,
+    }));
+
     // Add the image data to the product instance
     newProduct.images = images;
-    
+
     // Save the new product to the database
     await newProduct.save();
 
     console.log(newProduct);
 
-    req.flash('success', 'Successfully added new product!');
+    req.flash("success", "Successfully added new product!");
     res.redirect(`/products/${newProduct._id}`);
-
   } catch (err) {
-    console.error('Error creating new product:', err);
-    req.flash('error', `Error: ${err.message}`);
-    res.redirect('/products/new');
+    console.error("Error creating new product:", err);
+    req.flash("error", `Error: ${err.message}`);
+    res.redirect("/products/new");
   }
 });
 
@@ -105,7 +110,6 @@ app.post('/products', upload.array('images'), async (req, res) => {
 //   const products = await Product.find({});
 //   res.render('shop',{ products, currentPage: 'shop' });
 // })
-
 
 app.all(/(.*)/, (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
