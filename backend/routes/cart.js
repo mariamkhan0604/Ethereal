@@ -18,13 +18,16 @@ router.post("/add-to-cart", async (req, res) => {
     (item) => item.productId === product._id.toString()
   );
   // Check if the product is already in the cart
+    const imageUrl = (product.images && product.images.length > 0)
+    ? product.images[0].url
+    : '/images/placeholder.png';
   if (existingItem) {
     existingItem.quantity += 1; // Increment quantity
   } else {
     req.session.cart.push({
       productId: product._id.toString(),
       name: product.name,
-      image: product.images[0].url,
+      image: imageUrl,
       unit_price: product.price,
       quantity: 1,
     }); // Add new item
