@@ -6,11 +6,11 @@ const engine = require("ejs-mate");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const mongoose = require("mongoose");
-const Product=require('./models/Product');
-const Category = require('./models/Category');
-const user=require('./models/User');
-const flash=require('connect-flash');
-const ExpressError = require('./utils/ExpressError');
+const Product = require("./models/Product");
+const Category = require("./models/Category");
+const user = require("./models/User");
+const flash = require("connect-flash");
+const ExpressError = require("./utils/ExpressError");
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -56,15 +56,17 @@ app.use((req, res, next) => {
 const mainRoutes = require("./routes/main_routes");
 const authRoutes = require("./routes/auth");
 const cartRoutes = require("./routes/cart");
+const wishlistRoutes = require("./routes/wishlist");
 //route setup
 app.use("/", mainRoutes);
 app.use("/auth", authRoutes);
 app.use("/", cartRoutes);
+app.use("/", wishlistRoutes);
+
 // app.get('/shop', async (req, res, next) => {
-    
+
 // });
 // //Routes
-
 
 app.all(/(.*)/, (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
