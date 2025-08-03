@@ -6,11 +6,22 @@ const engine = require("ejs-mate");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const mongoose = require("mongoose");
+<<<<<<< HEAD
 const Product = require("./models/Product");
 const Category = require("./models/Category");
 const user = require("./models/User");
 const flash = require("connect-flash");
 const ExpressError = require("./utils/ExpressError");
+=======
+const Product=require('./models/Product');
+const Category = require('./models/Category');
+const user=require('./models/User');
+const flash=require('connect-flash');
+const ExpressError = require('./utils/ExpressError');
+const multer = require('multer');
+const { storage } = require('./cloudinary');
+const upload = multer({ storage });
+>>>>>>> 6ec54bc52f82e62b4754ee048f900881e0932a7d
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -66,7 +77,45 @@ app.use("/", wishlistRoutes);
 // app.get('/shop', async (req, res, next) => {
 
 // });
-// //Routes
+// // //Routes
+app.get('/products', async (req, res) => {
+  try {
+    const categories = await Category.find({});
+    res.render('add', { categories, currentPage: 'add' });
+  } catch (err) {
+    console.error('Error fetching categories:', err);
+   res.status(500).send('Error fetching categories');
+  }
+});
+app.post('/products', upload.array('images'), async (req, res) => {
+  try {
+    const newProduct = new Product(req.body);
+
+    // Map the files to get their Cloudinary URLs and filenames
+    const images = req.files.map(file => ({ url: file.path, filename: file.filename }));
+    
+    // Add the image data to the product instance
+    newProduct.images = images;
+    
+    // Save the new product to the database
+    await newProduct.save();
+
+    console.log(newProduct);
+
+    req.flash('success', 'Successfully added new product!');
+    res.redirect(`/products/${newProduct._id}`);
+
+  } catch (err) {
+    console.error('Error creating new product:', err);
+    req.flash('error', `Error: ${err.message}`);
+    res.redirect('/products/new');
+  }
+});
+
+// app.get('/shop',async(req,res)=>{
+//   const products = await Product.find({});
+//   res.render('shop',{ products, currentPage: 'shop' });
+// })
 
 app.all(/(.*)/, (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));

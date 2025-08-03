@@ -1,0 +1,9 @@
+.nav-link.active {
+  border-bottom: 1.5px solid black !important ;
+  padding-bottom: 2px !important;
+  
+}
+.nav-link:hover {
+  border-bottom: 1.5px solid #dee2e6; 
+  padding-bottom: 2px;
+}

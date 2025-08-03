@@ -12,6 +12,10 @@ const categories = [
     name: 'Bracelets',
     image: 'https://example.com/images/categories/bracelets.jpg',
   },
+  {
+    name:'Anklets',
+    image: 'https://example.com/images/categories/anklets.jpg',
+  }
 ];
 
 module.exports = categories;

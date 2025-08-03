@@ -65,103 +65,111 @@
       <main>
         <div class="container mt-4">
           <h1 class="text-center mb-4">Shop All Products</h1>
+        <%- include('partials/navbar') %>
+        <main>
+            <div class="container mt-4">
+                <h1 class="text-center mb-4">Shop All Products</h1>
 
-          <div id="activeFiltersContainer"></div>
-
-          <div class="shop-content">
-            <div class="filters-sidebar">
-              <div class="filter-section">
-                <h4 class="mb-3">Price</h4>
-                <form id="sliderFilterForm" action="/shop" method="GET">
-                  <div id="priceSlider" class="mb-3"></div>
-
-                  <div class="price-labels">
-                    <div>
-                      ₹<span id="sliderMinValue"
-                        ><%= typeof minPrice !== 'undefined' ? minPrice : 0
-                        %></span
-                      >
+                <div id="activeFiltersContainer">
                     </div>
-                    <div>
-                      ₹<span id="sliderMaxValue"
-                        ><%= typeof maxPrice !== 'undefined' ? maxPrice : 5000
-                        %></span
-                      >
-                    </div>
-                  </div>
 
-                  <input
-                    type="hidden"
-                    id="minPriceInput"
-                    name="minPrice"
-                    value="<%= typeof minPrice !== 'undefined' ? minPrice : 0 %>"
-                  />
-                  <input
-                    type="hidden"
-                    id="maxPriceInput"
-                    name="maxPrice"
-                    value="<%= typeof maxPrice !== 'undefined' ? maxPrice : 5000 %>"
-                  />
-                </form>
-              </div>
+                <div class="shop-content">
+                    <div class="filters-sidebar">
+                        <div class="filter-section">
+                            <h4 class="mb-3">Price</h4>
+                            <form id="sliderFilterForm" action="/shop" method="GET">
+                                <div id="priceSlider" class="mb-3"></div>
 
-              <div class="filter-section mt-4">
-                <h4 class="mb-3">Category</h4>
-                <form id="categoryFilterForm">
-                  <div class="form-group">
-                    <% if (typeof categories !== 'undefined' &&
-                    categories.length > 0) { %> <% categories.forEach((category,
-                    index) => { %>
+                                <div class="price-labels">
+                                    <div>
+                                        ₹<span id="sliderMinValue"
+                                            ><%= typeof minPrice !== 'undefined' ? minPrice : 0
+                                            %></span
+                                        >
+                                    </div>
+                                    <div>
+                                        ₹<span id="sliderMaxValue"
+                                            ><%= typeof maxPrice !== 'undefined' ? maxPrice : 5000
+                                            %></span
+                                        >
+                                    </div>
+                                </div>
+
+                                <input
+                                    type="hidden"
+                                    id="minPriceInput"
+                                    name="minPrice"
+                                    value="<%= typeof minPrice !== 'undefined' ? minPrice : 0 %>"
+                                />
+                                <input
+                                    type="hidden"
+                                    id="maxPriceInput"
+                                    name="maxPrice"
+                                    value="<%= typeof maxPrice !== 'undefined' ? maxPrice : 5000 %>"
+                                />
+
+                                </form>
+                        </div>
+
+                        <div class="filter-section mt-4">
+    <h4 class="mb-3">Category</h4>
+    <form id="categoryFilterForm">
+        <div class="form-group">
+            <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                <% categories.forEach((category, index) => { %>
                     <div class="form-check">
-                      <input class="form-check-input category-checkbox"
-                      type="checkbox" id="category<%= index %>" name="category"
-                      value="<%= category %>" <%= (typeof selectedCategories !==
-                      'undefined' && selectedCategories.includes(category)) ?
-                      'checked' : '' %> >
-                      <label class="form-check-label" for="category<%= index %>"
-                        ><%= category %></label
-                      >
+                        <input
+                            class="form-check-input category-checkbox"
+                            type="checkbox"
+                            id="category<%= index %>"
+                            name="category"
+                            value="<%= category %>"
+                            <%= (typeof selectedCategories !== 'undefined' && selectedCategories.includes(category)) ? 'checked' : '' %>
+                        >
+                        <label class="form-check-label" for="category<%= index %>"><%= category %></label>
                     </div>
-                    <% }); %> <% } else { %>
-                    <p class="text-muted">No categories available.</p>
-                    <% } %>
-                  </div>
-                </form>
-              </div>
-            </div>
+                <% }); %>
+            <% } else { %>
+                <p class="text-muted">No categories available.</p>
+            <% } %>
 
-            <div class="products-main">
-              <div class="row">
-                <% products.forEach(product => { %>
-                <div
-                  class="col-6 col-md-4 col-lg-3 d-flex justify-content-center"
-                >
-                  <div class="product-card">
-                    <img src="<%= product.image %>" alt="<%= product.name %>" />
-                    <div class="card-body">
-                      <div class="product-name"><%= product.name %></div>
-                      <p class="text-muted"><%= product.description %></p>
-                      <div class="product-price">₹<%= product.price %></div>
-                    </div>
-                    <form action="/add-to-cart" method="POST">
-                      <input
-                        type="hidden"
-                        name="productId"
-                        value="<%= product._id %>"
-                      />
-                      <button class="add-to-cart-btn theme-button">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span>Add to Cart</span>
-                      </button>
-                    </form>
-                  </div>
-                </div>
-                <% }) %>
-              </div>
-            </div>
-          </div>
         </div>
-      </main>
+    </form>
+</div>
+                    </div>
+
+                    <div class="products-main">
+                        <div class="row">
+                            <% products.forEach(product => { %>
+                                <div
+                                    class="col-6 col-md-4 col-lg-3 d-flex justify-content-center"
+                                >
+                                    <div class="product-card">
+                                        <img src="<%=product.images[0].url%>" alt="<%= product.name %>" />
+                                        <div class="card-body">
+                                            <div class="product-name"><%= product.name %></div>
+                                            <p class="text-muted"><%= product.description %></p>
+                                            <div class="product-price">₹<%= product.price %></div>
+                                        </div>
+                                        <form action="/add-to-cart" method="POST">
+                  <input
+                    type="hidden"
+                    name="productId"
+                    value="<%= product._id %>"
+                    />
+                                        <button class="add-to-cart-btn theme-button">
+                                            <i class="fas fa-shopping-bag"></i>
+                                            <span>Add to Cart</span>
+                                        </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
 
       <%- include('partials/footer') %>
     </div>

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Product = require("../models/Product");
 const Category = require("../models/Category");
 const productsData = require("./products");
-require("dotenv").config();
+require('dotenv').config({ path: '../.env' });
 
 mongoose
   .connect(process.env.DATABASE_URL) // from .env file

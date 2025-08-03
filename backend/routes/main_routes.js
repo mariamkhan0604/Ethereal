@@ -5,17 +5,16 @@ const Order = require("../models/Order.js");
 const Category = require('../models/Category');
 //Home route
 router.get("/", (req, res) => {
-  res.render("home");
+  res.render('home', { currentPage: 'home' });
 });
 
-//About and Contact routes
 router.get("/about", (req, res) => {
-  res.render("about");
-});
-router.get("/contact", (req, res) => {
-  res.render("contact");
+  res.render('about', { currentPage: 'about' });
 });
 
+router.get("/contact", (req, res) => {
+  res.render('contact', { currentPage: 'contact' });
+});
 //Shop routes
 router.get("/shop", async (req, res,next) => {
   try {
@@ -62,7 +61,8 @@ router.get("/shop", async (req, res,next) => {
             minPrice: minPrice,
             maxPrice: maxPrice,
             categories: allCategoriesInDb.map(cat => cat.name), 
-            selectedCategories: frontendSelectedCategoryNames 
+            selectedCategories: frontendSelectedCategoryNames ,
+            currentPage: 'shop'
         });
 
     } catch (e) {
