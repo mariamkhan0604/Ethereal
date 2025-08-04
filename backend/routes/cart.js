@@ -3,6 +3,7 @@ const router = express.Router();
 const Product = require("../models/Product.js");
 const Order = require("../models/Order.js");
 const { checkout } = require("./main_routes.js");
+const {isLoggedIn}= require('../utils/middleware.js');
 
 // Add to Cart route
 router.post("/add-to-cart", async (req, res) => {
@@ -18,13 +19,16 @@ router.post("/add-to-cart", async (req, res) => {
     (item) => item.productId === product._id.toString()
   );
   // Check if the product is already in the cart
+    const imageUrl = (product.images && product.images.length > 0)
+    ? product.images[0].url
+    : '/images/placeholder.png';
   if (existingItem) {
     existingItem.quantity += 1; // Increment quantity
   } else {
     req.session.cart.push({
       productId: product._id.toString(),
       name: product.name,
-      image: product.images[0].url,
+      image: imageUrl,
       unit_price: product.price,
       quantity: 1,
     }); // Add new item
@@ -36,7 +40,7 @@ router.post("/add-to-cart", async (req, res) => {
 });
 
 //cart route
-router.get("/cart", (req, res) => {
+router.get("/cart",isLoggedIn,(req, res) => {
   const cart = req.session.cart || [];
 
   // Calculate total price
@@ -85,7 +89,7 @@ router.post("/cart/update/:productId", (req, res) => {
 //   res.render("checkout", { cart, totalPrice });
 // });
 
-router.get("/checkout", (req, res) => {
+router.get("/checkout", isLoggedIn,(req, res) => {
   const cart = req.session.cart || [];
 
   // Calculate total price
@@ -97,7 +101,7 @@ router.get("/checkout", (req, res) => {
 });
 
 //place order post request
-router.post("/placeOrder", async (req, res) => {
+router.post("/placeOrder",isLoggedIn,async (req, res) => {
   const cart = req.session.cart || [];
 
   if (!cart.length) {
