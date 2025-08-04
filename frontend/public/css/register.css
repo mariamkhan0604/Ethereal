@@ -78,3 +78,20 @@ main {
 .newFont {
   font-family: 'Raleway', sans-serif;
 }
+
+
+.register-link {
+    text-align: center;
+    margin-top: 19px;
+    font-family: 'Raleway', sans-serif;
+}
+
+.register-link p a {
+    font-weight: bold;
+    text-decoration: none;
+    color: #94542f; 
+}
+.register-link p a:hover {
+    text-decoration: underline;
+    color: #742f08;
+}
