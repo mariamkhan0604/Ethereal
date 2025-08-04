@@ -39,6 +39,9 @@ const userSchema = new Schema({
     type: Boolean,
     default: false, // By default, a new user is not an admin
   },
+  // for reset password
+  resetToken: String,
+  resetTokenExpire: Date,
 });
 
 // set up pre-save middleware to create password

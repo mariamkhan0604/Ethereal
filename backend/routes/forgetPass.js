@@ -23,7 +23,7 @@ router.post("/forgot-password", async (req, res) => {
   user.resetTokenExpire = Date.now() + 3600000; // 1 hour
   await user.save();
 
-  const resetLink = `http://localhost:3000/auth/reset/${token}`;
+  const resetLink = `http://localhost:3000/reset-password/${token}`;
 
   // Nodemailer transporter
   const transporter = nodemailer.createTransport({
@@ -45,7 +45,7 @@ router.post("/forgot-password", async (req, res) => {
 });
 
 // Step 2: Render Reset Form
-router.get("/reset/:token", async (req, res) => {
+router.get("/reset-password/:token", async (req, res) => {
   const user = await User.findOne({
     resetToken: req.params.token,
     resetTokenExpire: { $gt: Date.now() },
@@ -55,11 +55,11 @@ router.get("/reset/:token", async (req, res) => {
     return res.status(400).send("Token is invalid or has expired");
   }
 
-  res.render("reset-password", { token: req.params.token });
+  res.render("resetPass", { token: req.params.token });
 });
 
 // Step 3: Handle New Password Submission
-router.post("/reset/:token", async (req, res) => {
+router.post("/reset-password/:token", async (req, res) => {
   const { password } = req.body;
   const user = await User.findOne({
     resetToken: req.params.token,
@@ -75,7 +75,8 @@ router.post("/reset/:token", async (req, res) => {
   user.resetTokenExpire = undefined;
   await user.save();
 
-  res.send("Password has been reset successfully");
+  req.flash("success", "Password has been reset successfully. Please login.");
+  res.redirect("/auth/login");
 });
 
 module.exports = router;
