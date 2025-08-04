@@ -1,7 +1,8 @@
+
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid">
     <!-- Logo -->
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="/">
       <img
         src="/images/logo.png"
         alt="Ethereal Jewels Logo"
@@ -38,6 +39,11 @@
           <li class="nav-item">
             <a class="nav-link <% if (typeof currentPage !== 'undefined' && currentPage === 'shop') { %>active<% } %>" href="/shop">Shop</a>
           </li>
+          <% if (currentUser && currentUser.isAdmin) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/products">Add Products</a>
+          </li>
+        <% } %>
           <li class="nav-item">
             <a class="nav-link <% if (typeof currentPage !== 'undefined' && currentPage === 'about') { %>active<% } %>" href="/about">Our Story</a>
           </li>
@@ -47,34 +53,7 @@
         </ul>
       </div>
 
-      <!-- Right Icons -->
-<div class="d-flex align-items-center flex-column flex-lg-row text-center ms-lg-auto me-4">
-  <!-- Login -->
-  <a href="/auth/register" class="nav-link ms-0 ms-lg-3">
-    <svg width="24" fill="none" viewBox="0 0 24 24">
-      <path d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z"
-        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-      <path d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497"
-        stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></path>
-    </svg>
-  </a>
-
- 
-
-  <!-- Wishlist -->
- <a href="/wishlist" class="nav-link ms-0 ms-lg-3 d-flex align-items-center">
-  <i class="bi bi-heart wishlist-icon"></i>
-</a>
-
-
-  <!-- Cart -->
-  <a href="/cart" class="nav-link ms-0 ms-lg-3">
-    <svg width="24" fill="none" viewBox="0 0 24 24">
-      <path d="M4.75 8.25A.75.75 0 0 0 4 9L3 19.125c0 1.418 1.207 2.625 2.625 2.625h12.75c1.418 0 2.625-1.149 2.625-2.566L20 9a.75.75 0 0 0-.75-.75H4.75Zm2.75 0v-1.5a4.5 4.5 0 0 1 4.5-4.5v0a4.5 4.5 0 0 1 4.5 4.5v1.5"
-        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-    </svg>
-  </a>
-</div>
+      <!-- Right Icons (now inside collapse) -->
 
       <div
         class="d-flex align-items-center flex-column flex-lg-row text-center ms-lg-auto me-4"
