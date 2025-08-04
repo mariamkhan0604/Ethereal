@@ -64,5 +64,6 @@ router.get("/logout", (req, res) => {
     res.redirect("/auth/login");
   });
 });
+// GET /auth/forgot-password
 
 module.exports = router;

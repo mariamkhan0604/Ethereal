@@ -61,12 +61,13 @@ const mainRoutes = require("./routes/main_routes");
 const authRoutes = require("./routes/auth");
 const cartRoutes = require("./routes/cart");
 const wishlistRoutes = require("./routes/wishlist");
+const forgetPassRoutes = require("./routes/forgetPass");
 //route setup
 app.use("/", mainRoutes);
 app.use("/auth", authRoutes);
 app.use("/", cartRoutes);
 app.use("/", wishlistRoutes);
-
+app.use("/", forgetPassRoutes);
 // app.get('/shop', async (req, res, next) => {
 
 // });
