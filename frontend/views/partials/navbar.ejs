@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid">
     <!-- Logo -->
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="/">
       <img
         src="/images/logo.png"
         alt="Ethereal Jewels Logo"
@@ -38,6 +38,11 @@
           <li class="nav-item">
             <a class="nav-link <% if (typeof currentPage !== 'undefined' && currentPage === 'shop') { %>active<% } %>" href="/shop">Shop</a>
           </li>
+          <% if (currentUser && currentUser.isAdmin) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/products">Add Products</a>
+          </li>
+        <% } %>
           <li class="nav-item">
             <a class="nav-link <% if (typeof currentPage !== 'undefined' && currentPage === 'about') { %>active<% } %>" href="/about">Our Story</a>
           </li>
