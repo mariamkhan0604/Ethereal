@@ -7,3 +7,13 @@
   border-bottom: 1.5px solid #dee2e6; 
   padding-bottom: 2px;
 }
+
+
+.wishlist-icon {
+  font-size: 1.6rem;
+  font-weight: bold;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

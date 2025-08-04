@@ -336,3 +336,25 @@ h1.text-center.mb-4 {
     padding-right: 0;
   }
 }
+
+/* wishlist button */
+
+.wishlist-btn-inline {
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  color: #c0392b;
+  padding: 0;
+  margin-left: 10px;
+  transition: transform 0.2s ease;
+}
+
+.wishlist-btn-inline:hover {
+  transform: scale(1.2);
+  color: #a93226;
+}
+
+.wishlist-form-inline {
+  display: inline;
+}
+

@@ -3,7 +3,33 @@
 <div class="container">
   <h2>Your Wishlist</h2>
 
-  <% if(wishlistItems.length==0) {%>
-  <div class="alert alert-info mt-3">Your wishlist is empty.</div>
+  <% if (wishlistItems.length === 0) { %>
+  <div class="empty-wishlist">
+    <p>Your wishlist is empty.</p>
+  </div>
+  <% } else { %>
+  <div class="row">
+    <% wishlistItems.forEach(product => { %>
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <img
+          src="<%= product.image %>"
+          class="card-img-top"
+          alt="<%= product.name %>"
+          style="height: 250px; object-fit: cover"
+        />
+        <div class="card-body">
+          <h5 class="card-title"><%= product.name %></h5>
+          <p class="card-text">₹<%= product.price %></p>
+          <form action="/wishlist/<%= product._id %>" method="POST">
+            <button type="submit" class="btn btn-outline-danger">
+              <i class="fas fa-heart-broken"></i> Remove from Wishlist
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <% }); %>
+  </div>
   <% } %>
 </div>
