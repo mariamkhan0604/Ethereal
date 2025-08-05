@@ -72,18 +72,44 @@
             </a>
             <span class="tooltip-text">Login</span>
           </span>
-        <% } else { %>
-          <span class="tooltip-container">
-            <a href="/auth/logout" class="nav-link ms-0 ms-lg-3">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <path d="M16 17l5-5-5-5"></path>
-                <path d="M21 12H9"></path>
-              </svg>
-            </a>
-            <span class="tooltip-text">Logout</span>
-          </span>
-        <% } %>
+       <% } else { %>
+  <div class="profile-hover-container position-relative ms-0 ms-lg-3">
+    <span class="nav-link profile-trigger">
+      <svg width="24" fill="none" viewBox="0 0 24 24">
+        <path
+          d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        ></path>
+        <path
+          d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-miterlimit="10"
+        ></path>
+      </svg>
+    </span>
+
+    <ul class="profile-hover-menu shadow">
+      <li class="px-3 pt-2">
+        <strong>Hello <%= currentUser.name || 'User' %></strong><br>
+        <small><%= currentUser.email || currentUser.phone %></small>
+      </li>
+      <li><hr class="dropdown-divider" /></li>
+      <li><a class="dropdown-item" href="/profile">Profile</a></li>
+      <li><a class="dropdown-item" href="/orders">Orders</a></li>
+      <li><a class="dropdown-item" href="/wishlist">Wishlist</a></li>
+      <li><a class="dropdown-item" href="/contact">Contact Us</a></li>
+      <li><hr class="dropdown-divider" /></li>
+
+      <li><a class="dropdown-item text-danger" href="/auth/logout">Logout</a></li>
+    </ul>
+  </div>
+<% } %>
+
+
         <span class="tooltip-container">
           <a href="/wishlist" class="nav-link ms-0 ms-lg-3">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -111,3 +137,18 @@
   </div>
   <div>
 </nav>
+
+
+
+<% /*} else {
+          <span class="tooltip-container">
+            <a href="/auth/logout" class="nav-link ms-0 ms-lg-3">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <path d="M16 17l5-5-5-5"></path>
+                <path d="M21 12H9"></path>
+              </svg>
+            </a>
+            <span class="tooltip-text">Logout</span>
+          </span>
+         } */%>
