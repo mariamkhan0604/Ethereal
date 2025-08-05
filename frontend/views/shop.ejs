@@ -64,6 +64,7 @@
       <main>
         <div class="container mt-4">
           <h1 class="text-center mb-4">Shop All Products</h1>
+          <div class="flash-container"><%- include('./partials/flash') %></div>
 
           <div id="activeFiltersContainer"></div>
 
@@ -146,7 +147,6 @@
                         class="product-name d-flex justify-content-between align-items-center"
                       >
                         <span><%= product.name %></span>
-                        <!-- Wishlist Heart Button -->
 
                         <form
                           action="/wishlist/<%= product._id %>"

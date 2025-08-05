@@ -30,3 +30,64 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+
+/* //For cards */
+/* Wishlist Cards */
+.wishlist-container {
+  padding-top: 40px;
+  padding-bottom: 60px;
+}
+
+.wishlist-card {
+  background: #fff;
+  border: none;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.08);
+  font-family: 'Poppins', sans-serif;
+}
+
+.wishlist-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.12);
+}
+
+.wishlist-card img {
+  height: 250px;
+  object-fit: cover;
+  border-radius: 16px 16px 0 0;
+}
+
+.wishlist-card .card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.wishlist-card .card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.wishlist-card .card-text {
+  font-size: 0.95rem;
+  color: #777;
+  margin-bottom: 12px;
+}
+
+.wishlist-card .card-price {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #8b5e3c;
+}
+
+.wishlist-card .btn-outline-danger {
+  font-size: 0.875rem;
+  padding: 6px 12px;
+  border-radius: 8px;
+}

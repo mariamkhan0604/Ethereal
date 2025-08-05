@@ -3,6 +3,23 @@
   <head>
     <%- include('../partials/header') %>
     <link rel="stylesheet" href="/css/register.css" />
+
+    <style>
+      .forgot-password-link {
+        display: block;
+        margin-top: 10px;
+        color: #007bff;
+        font-size: 0.95rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: color 0.2s ease-in-out;
+      }
+
+      .forgot-password-link:hover {
+        color: #0056b3;
+        text-decoration: underline;
+      }
+    </style>
   </head>
   <body>
     <%- include('../partials/navbar') %>
@@ -22,8 +39,7 @@
           >
             Login
           </h2>
-          <!-- <input type="text" name="firstName" placeholder="First Name" required />
-        <input type="text" name="lastName" placeholder="Last Name" required /> -->
+
           <input type="email" name="email" placeholder="Email" required />
           <input
             type="password"
@@ -33,7 +49,11 @@
           />
           <button type="submit">Login</button>
         </form>
-        <a href="/forgot-password" class="d-block mt-2">Forgot Password?</a>
+
+        <a href="/forgot-password" class="forgot-password-link">
+          Forgot your password?
+        </a>
+
         <div class="register-link">
           <p>Don't have an account? <a href="/auth/register">Register</a></p>
         </div>
