@@ -1,0 +1,32 @@
+<% layout('layout') -%>
+
+<section class="profile-section">
+  <div class="profile-container">
+    <div class="profile-image">
+      <img src="/images/profile.png" alt="Profile Illustration" />
+    </div>
+    <div class="profile-content">
+      <h2>Your Profile</h2>
+
+      <p>
+        Hello <strong><%= currentUser.name || 'Guest' %></strong>! <br />
+        Welcome to your Ethereal Jewels account.
+      </p>
+
+      <p>
+        We're glad to have you here. Start exploring our collections or complete
+        your profile for a more personalized experience.
+      </p>
+
+      <div class="user-info">
+        <p><strong>Email:</strong> <%= currentUser.email || 'Not added' %></p>
+        <p><strong>Phone:</strong> <%= currentUser.phone || 'Not added' %></p>
+      </div>
+
+      <div class="profile-buttons">
+        <a href="/shop" class="btn-custom">Explore Shop</a>
+        <a href="/profile/edit" class="btn-custom outline">Edit Profile</a>
+      </div>
+    </div>
+  </div>
+</section>
