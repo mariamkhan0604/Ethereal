@@ -1,6 +1,6 @@
 <% layout('layout') -%>
 
-<div class="container">
+<div class="container wishlist-container">
   <h2>Your Wishlist</h2>
 
   <% if (wishlistItems.length === 0) { %>
@@ -10,10 +10,10 @@
   <% } else { %>
   <div class="row">
     <% wishlistItems.forEach(product => { %>
-    <div class="col-md-4 mb-4">
-      <div class="card h-100 shadow-sm">
+    <div class="col-12 col-sm-6 col-lg-4 mb-4">
+      <div class="card wishlist-card h-100">
         <img
-          src="<%= product.image %>"
+          src="<%= product.images[0].url%>"
           class="card-img-top"
           alt="<%= product.name %>"
           style="height: 250px; object-fit: cover"
@@ -21,7 +21,7 @@
         <div class="card-body">
           <h5 class="card-title"><%= product.name %></h5>
           <p class="card-text">₹<%= product.price %></p>
-          <form action="/wishlist/<%= product._id %>" method="POST">
+          <form action="/remove/<%= product._id %>" method="POST">
             <button type="submit" class="btn btn-outline-danger">
               <i class="fas fa-heart-broken"></i> Remove from Wishlist
             </button>
