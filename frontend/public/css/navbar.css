@@ -7,3 +7,45 @@
   border-bottom: 1.5px solid #dee2e6; 
   padding-bottom: 2px;
 }
+/* --- Tooltip Container and Text Styles --- */
+.tooltip-container {
+    position: relative; /* CRITICAL: This is the reference point for the tooltip */
+    display: inline-block;
+    cursor: pointer;
+}
+
+.tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+    width: 60px; /* Reduced width for a smaller tooltip */
+    background-color: rgba(51, 51, 51, 0.9); /* A slightly transparent dark background */
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 4px;
+    font-size: 11px; /* Smaller font size */
+    position: absolute;
+    z-index: 100;
+    top: 125%; /* Position BELOW the icon */
+    left: 50%;
+    margin-left: -30px; /* Half of the width to center it */
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+/* Show the tooltip text when hovering over the container */
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* An arrow at the top of the tooltip, pointing up */
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent rgba(51, 51, 51, 0.9) transparent;
+}
