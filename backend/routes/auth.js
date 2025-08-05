@@ -40,20 +40,25 @@ router.post(
     }
     console.log("hello");
     const isValid = await bcrypt.compare(password, existingUser.password);
- if (!isValid) {
+    if (!isValid) {
       req.flash("error", "Invalid email or password.");
       return res.redirect("/auth/login");
     }
     req.session.user = {
-  _id: existingUser._id,
-  isAdmin: existingUser.isAdmin
-  };
+      _id: existingUser._id,
+      name: `${existingUser.firstName} ${existingUser.lastName}`,
+      email: existingUser.email,
+      phone: existingUser.phone || "", // optional
+      isAdmin: existingUser.isAdmin,
+    };
+
     console.log("Password is valid:", isValid);
     console.log("Redirecting to / with session user:", req.session.user);
     console.log("User from DB:", existingUser);
     console.log("Password entered:", password);
     console.log("Password stored:", existingUser.password);
-   
+    console.log("Current session user:", req.session.user);
+
     req.flash("success", `Welcome back, ${existingUser.firstName}!`);
     console.log("✅ Login successful:", existingUser.email);
     res.redirect("/");
@@ -61,7 +66,7 @@ router.post(
 );
 router.get("/logout", (req, res) => {
   req.session.destroy(() => {
-    res.redirect("/auth/login");
+    res.redirect("/");
   });
 });
 // GET /auth/forgot-password
