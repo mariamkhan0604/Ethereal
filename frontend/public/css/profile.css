@@ -1,0 +1,135 @@
+.profile-section {
+  background-color: #fef8f5;
+  padding: 80px 20px;
+  font-family: 'Raleway', sans-serif;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-container {
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  padding: 40px;
+  gap: 4rem;
+  max-width: 1000px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+/* Left: Profile Image */
+.profile-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-image img {
+  width: 220px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+/* Right: Profile Content */
+.profile-content {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10px;
+}
+
+.profile-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #8b5e3c;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.profile-content p {
+  line-height: 1.7;
+  color: #444;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.user-info {
+  background-color: #fdfdfd;
+  border-radius: 12px;
+  padding: 20px 30px;
+  margin-top: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.03);
+  text-align: left;
+  width: 100%;
+  max-width: 400px;
+}
+
+.user-info p {
+  margin: 10px 0;
+  color: #444;
+  font-weight: 500;
+}
+
+.profile-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.btn-custom {
+  background-color: #8b5e3c;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: #6d4529;
+  color: #fff;
+}
+
+.btn-custom.outline {
+  background: none;
+  border: 2px solid #8b5e3c;
+  color: #8b5e3c;
+}
+
+.btn-custom.outline:hover {
+  background-color: #8b5e3c;
+  color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .profile-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-content,
+  .user-info {
+    text-align: center;
+    align-items: center;
+  }
+
+  .profile-buttons {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .user-info {
+    max-width: 100%;
+  }
+}
