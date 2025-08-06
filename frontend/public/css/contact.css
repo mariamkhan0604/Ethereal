@@ -96,19 +96,13 @@
   color: #555;
   margin: 0.5rem 0;
 }
-
-.social-icons {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 15px;
+.social-icons a svg {
+  color: #a46a2e; /* Change this to your desired color */
+  fill: currentColor;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.social-icons img {
-  width: 35px;
-  height: 35px;
-  transition: transform 0.3s ease;
-}
-
-.social-icons img:hover {
-  transform: scale(1.1);
+.social-icons a:hover svg {
+  color: #d28c45; /* Optional: hover color */
+  transform: scale(1.2);
 }

@@ -15,6 +15,7 @@ const multer = require("multer");
 const { storage } = require("./cloudinary");
 const upload = multer({ storage });
 const { isLoggedIn, isAdmin } = require("./utils/middleware");
+const nodemailer = require("nodemailer");
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -112,7 +113,39 @@ app.post(
     }
   }
 );
+app.post("/contact", async (req, res) => {
+  const { name, email, subject, message } = req.body;
 
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER, // <-- USE YOUR EMAIL_USER FROM .env
+      pass: process.env.EMAIL_PASS, // <-- USE YOUR EMAIL_PASS FROM .env
+    },
+  });
+
+  let mailOptions = {
+    from: `"${name}" <${email}>`,
+    to: process.env.EMAIL_USER, // You can send it to your own email address
+    subject: `New contact form submission: ${subject}`,
+    html: `
+      <h2>New Message from Ethereal Jewels Website</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Message:</strong> ${message}</p>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    req.flash("success", "Your message has been sent successfully!");
+    res.redirect("/contact");
+  } catch (error) {
+    console.error("Error sending email:", error);
+    req.flash("error", "There was an error sending your message. Please try again.");
+    res.redirect("/contact");
+  }
+});
 // app.get('/shop',async(req,res)=>{
 //   const products = await Product.find({});
 //   res.render('shop',{ products, currentPage: 'shop' });
