@@ -7,6 +7,10 @@
   border-bottom: 1.5px solid #dee2e6; 
   padding-bottom: 2px;
 }
+img{
+  margin-left: 60px;
+  margin-top: 10px;
+}
 /* --- Tooltip Container and Text Styles --- */
 .tooltip-container {
     position: relative; /* CRITICAL: This is the reference point for the tooltip */

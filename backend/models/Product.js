@@ -27,18 +27,6 @@ images: [
     min: 0,
     default: 0,
   },
-  material: {
-    type: String,
-  },
-  size: {
-    type: String,
-  },
-  gemstone: {
-    type: String,
-  },
-  cut: {
-    type: String,
-  },
   category: {
     type: Schema.Types.ObjectId,
     ref: "Category",

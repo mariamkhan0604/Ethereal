@@ -71,10 +71,6 @@ app.use("/", cartRoutes);
 app.use("/", wishlistRoutes);
 app.use("/", forgetPassRoutes);
 app.use("/", profileRoutes);
-// app.get('/shop', async (req, res, next) => {
-
-// });
-// // //Routes
 app.get("/products", isLoggedIn, isAdmin, async (req, res) => {
   try {
     const categories = await Category.find({});
@@ -108,7 +104,7 @@ app.post(
       console.log(newProduct);
 
       req.flash("success", "Successfully added new product!");
-      res.redirect(`/products/${newProduct._id}`);
+      res.redirect(`/shop`);
     } catch (err) {
       console.error("Error creating new product:", err);
       req.flash("error", `Error: ${err.message}`);
