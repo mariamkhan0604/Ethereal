@@ -1,0 +1,204 @@
+<% layout('layout') -%>
+
+<link
+  href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+  rel="stylesheet"
+/>
+
+<style>
+  .orders-container {
+    padding-top: 40px;
+    padding-bottom: 60px;
+    font-family: "Poppins", sans-serif;
+  }
+
+  .order-card {
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+
+  .order-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+  }
+
+  .order-card-header {
+    background-color: #f9f9f9;
+    border-radius: 16px 16px 0 0;
+    padding: 18px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .order-date,
+  .payment-method {
+    font-size: 0.9rem;
+    color: #666;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 5px;
+    background: #eee;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .order-card-body {
+    padding: 26px;
+    font-size: 0.96rem;
+    color: #444;
+  }
+
+  .order-card-body h5 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+  }
+
+  .order-card-body p {
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .order-card-body ul {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  .order-card-body ul li {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    background: #f6f6f6;
+    padding: 10px 14px;
+    border-radius: 8px;
+  }
+
+  .order-total {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #8b5e3c;
+    margin-top: 22px;
+    border-top: 1px solid #eee;
+    padding-top: 16px;
+  }
+
+  .empty-orders {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 100px auto;
+    padding: 50px 30px;
+    max-width: 500px;
+    border-radius: 16px;
+    background-color: #fff;
+    box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
+    color: #444;
+    font-family: "Poppins", sans-serif;
+    text-align: center;
+    animation: fadeIn 0.6s ease-in-out;
+    font-size: 1.3rem;
+  }
+
+  .empty-orders p {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #666;
+    margin: 0;
+  }
+
+  .btn-custom {
+    font-family: "Poppins", sans-serif;
+    padding: 10px 22px;
+    font-size: 1rem;
+    background-color: #666;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
+  }
+
+  .btn-custom:hover {
+    background-color: #8b5e3c;
+    transform: translateY(-2px);
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 576px) {
+    .order-card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .order-card-body ul li {
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
+</style>
+
+<div class="container orders-container">
+  <h2 class="text-center mb-4">My Orders</h2>
+
+  <% if (orders.length === 0) { %>
+  <div class="empty-orders">
+    <p>You haven’t placed any orders yet.</p>
+  </div>
+  <% } else { %> <% orders.forEach(order => { %>
+  <div class="order-card">
+    <div class="order-card-header">
+      <div class="order-date">📅 <%= order.placedAt.toDateString() %></div>
+      <div class="payment-method"><%= order.paymentMethod %></div>
+    </div>
+
+    <div class="order-card-body">
+      <h5>Delivery Address</h5>
+      <p>
+        <%= order.customer.fullName %><br />
+        <%= order.customer.address %>, <%= order.customer.city %> - <%=
+        order.customer.pincode %><br />
+        <%= order.customer.email %>
+      </p>
+
+      <h5>Items Ordered</h5>
+      <ul>
+        <% order.items.forEach(item => { %>
+        <li>
+          <span><%= item.name %> × <%= item.quantity %></span>
+          <span>₹<%= item.unit_price %></span>
+        </li>
+        <% }) %>
+      </ul>
+
+      <div class="order-total">Total Amount: ₹<%= order.totalAmount %></div>
+    </div>
+  </div>
+  <% }) %> <% } %>
+</div>
+
+<div class="container">
+  <div class="text-center mt-4">
+    <a href="/shop" class="btn btn-custom">Continue Shopping</a>
+  </div>
+</div>
