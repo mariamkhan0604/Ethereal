@@ -1,0 +1,61 @@
+<% layout('layout') -%>
+
+<section class="checkout">
+  <div class="checkout-tab">
+    <h1 class="checkout-title">
+      🛒 Checkout for <%= product.name %>
+      <span class="checkout-subtitle">Confirm your details below</span>
+    </h1>
+
+    <div class="cart-summary">
+      <h2>Product Summary</h2>
+      <ul>
+        <li><strong>Product:</strong> <%= product.name %></li>
+        <li><strong>Price:</strong> ₹<%= product.price %></li>
+      </ul>
+    </div>
+  </div>
+
+  <form action="/placeOrder" method="POST" class="checkout-form">
+    <h2>📦 Shipping Details</h2>
+
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input type="text" name="fullName" id="fullName" required />
+    </div>
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <textarea name="address" id="address" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="city">City</label>
+      <input type="text" name="city" id="city" required />
+    </div>
+
+    <div class="form-group">
+      <label for="pincode">Pincode</label>
+      <input type="text" name="pincode" id="pincode" required />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" name="email" id="email" required />
+    </div>
+
+    <h2>💳 Payment Method</h2>
+    <div class="form-group">
+      <label for="payment">Choose a Payment Method:</label>
+      <select name="payment" id="payment" required>
+        <option value="">--Select--</option>
+        <option value="cod">Cash on Delivery</option>
+        <option value="upi">UPI</option>
+        <option value="card">Credit/Debit Card</option>
+        <option value="netbanking">Net Banking</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">Place Order</button>
+  </form>
+</section>

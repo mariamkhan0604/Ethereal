@@ -1,0 +1,85 @@
+<% layout('layout') -%>
+
+<section class="product-details-section">
+  <div class="product-details-container">
+    <!-- Product Image -->
+    <div class="product-image">
+      <img src="<%= product.images[0].url %>" alt="<%= product.name %>" />
+    </div>
+
+    <!-- Product Info -->
+
+    <div class="product-content">
+      <!-- Flash Message Block -->
+
+      <div class="flash-container"><%- include('./partials/flash') %></div>
+
+      <h2><%= product.name %></h2>
+      <p class="product-description"><%= product.description %></p>
+
+      <div class="product-meta">
+        <p><strong>Category:</strong> <%= product.category.name %></p>
+        <p><strong>Price:</strong> ₹<%= product.price %></p>
+
+        <!-- Size Selector -->
+        <div class="product-size">
+          <label for="size"><strong>Size:</strong></label>
+          <select name="size" id="size" required>
+            <option value="">Select</option>
+            <option value="XS">XS</option>
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+        </div>
+
+        <!-- Quantity Selector -->
+        <div class="product-quantity">
+          <label for="quantity"><strong>Quantity:</strong></label>
+          <input
+            type="number"
+            name="quantity"
+            id="quantity"
+            min="1"
+            max="10"
+            value="1"
+            required
+          />
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="product-buttons">
+          <form action="/cart/add/<%= product._id %>" method="POST">
+            <input type="hidden" name="productId" value="<%= product._id %>" />
+            <button type="submit" class="btn-custom">Add to Cart</button>
+          </form>
+
+          <a href="/checkout/<%= product._id %>" class="btn-custom outline"
+            >Buy Now</a
+          >
+
+          <!-- Wishlist Button -->
+          <form
+            action="/wishlist/add/<%= product._id %>"
+            method="POST"
+            style="display: inline"
+          >
+            <button type="submit" class="btn-custom wishlist-btn">
+              ♡ Wishlist
+            </button>
+          </form>
+        </div>
+
+        <!-- Return Policy -->
+        <div class="return-policy">
+          <h4>Return Policy</h4>
+          <p>
+            <strong>Easy returns within 7 days of delivery.</strong><br />
+            Item must be unused and in original packaging.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
