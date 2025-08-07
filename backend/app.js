@@ -64,6 +64,8 @@ const cartRoutes = require("./routes/cart");
 const wishlistRoutes = require("./routes/wishlist");
 const forgetPassRoutes = require("./routes/forgetPass");
 const profileRoutes = require("./routes/profile");
+const orderRoutes = require("./routes/order");
+const directAddRoutes = require("./routes/direct_add");
 //route setup
 app.use("/", mainRoutes);
 app.use("/auth", authRoutes);
@@ -71,6 +73,8 @@ app.use("/", cartRoutes);
 app.use("/", wishlistRoutes);
 app.use("/", forgetPassRoutes);
 app.use("/", profileRoutes);
+app.use("/", orderRoutes);
+app.use("/", directAddRoutes);
 app.get("/products", isLoggedIn, isAdmin, async (req, res) => {
   try {
     const categories = await Category.find({});
@@ -112,6 +116,16 @@ app.post(
     }
   }
 );
+
+app.get("/product/:id", async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id).populate("category");
+  if (!product) {
+    req.flash("error", "Product not found");
+    return res.redirect("/shop");
+  }
+  res.render("product_show", { product });
+});
 
 // app.get('/shop',async(req,res)=>{
 //   const products = await Product.find({});
