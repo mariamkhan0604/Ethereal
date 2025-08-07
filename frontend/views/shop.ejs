@@ -28,7 +28,6 @@
       .noUi-tooltip {
         display: none !important;
       }
-
       .noUi-target {
         background: #e0e0e0;
         border-radius: 1rem;
@@ -36,11 +35,9 @@
         height: 8px;
         box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
       }
-
       .noUi-connect {
         background: #8b5e3c;
       }
-
       .noUi-horizontal .noUi-handle {
         width: 18px;
         height: 18px;
@@ -51,7 +48,6 @@
         cursor: grab;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
       }
-
       .noUi-handle::before,
       .noUi-handle::after {
         display: none !important;
@@ -65,31 +61,25 @@
         <div class="container mt-4">
           <h1 class="text-center mb-4">Shop All Products</h1>
           <div class="flash-container"><%- include('./partials/flash') %></div>
-
           <div id="activeFiltersContainer"></div>
-
           <div class="shop-content">
             <div class="filters-sidebar">
               <div class="filter-section">
                 <h4 class="mb-3">Price</h4>
                 <form id="sliderFilterForm" action="/shop" method="GET">
                   <div id="priceSlider" class="mb-3"></div>
-
                   <div class="price-labels">
                     <div>
                       ₹<span id="sliderMinValue"
-                        ><%= typeof minPrice !== 'undefined' ? minPrice : 0
-                        %></span
+                        ><%= typeof minPrice !== 'undefined' ? minPrice : 0 %></span
                       >
                     </div>
                     <div>
                       ₹<span id="sliderMaxValue"
-                        ><%= typeof maxPrice !== 'undefined' ? maxPrice : 5000
-                        %></span
+                        ><%= typeof maxPrice !== 'undefined' ? maxPrice : 5000 %></span
                       >
                     </div>
                   </div>
-
                   <input
                     type="hidden"
                     id="minPriceInput"
@@ -104,20 +94,21 @@
                   />
                 </form>
               </div>
-
               <div class="filter-section mt-4">
                 <h4 class="mb-3">Category</h4>
                 <form id="categoryFilterForm">
                   <div class="form-group">
-                    <% if (typeof categories !== 'undefined' &&
-                    categories.length > 0) { %> <% categories.forEach((category,
-                    index) => { %>
+                    <% if (typeof categories !== 'undefined' && categories.length > 0) { %>
+                    <% categories.forEach((category, index) => { %>
                     <div class="form-check">
-                      <input class="form-check-input category-checkbox"
-                      type="checkbox" id="category<%= index %>" name="category"
-                      value="<%= category %>" <%= (typeof selectedCategories !==
-                      'undefined' && selectedCategories.includes(category)) ?
-                      'checked' : '' %> >
+                      <input
+                        class="form-check-input category-checkbox"
+                        type="checkbox"
+                        id="category<%= index %>"
+                        name="category"
+                        value="<%= category %>"
+                        <%= (typeof selectedCategories !== 'undefined' && selectedCategories.includes(category)) ? 'checked' : '' %>
+                      />
                       <label class="form-check-label" for="category<%= index %>"
                         ><%= category %></label
                       >
@@ -140,6 +131,7 @@
                     <img
                       src="<%=product.images[0].url%>"
                       alt="<%= product.name %>"
+                      id="imgg"
                     />
 
                     <div class="card-body">
@@ -163,30 +155,28 @@
                             aria-label="Toggle wishlist"
                           >
                             <% const isWishlisted = userWishlistProductIds &&
-                            userWishlistProductIds.includes(product._id.toString());
-                            %>
+                            userWishlistProductIds.includes(product._id.toString()); %>
                             <i
                               class="bi <%= isWishlisted ? 'bi-heart-fill' : 'bi-heart' %>"
                             ></i>
                           </button>
                         </form>
                       </div>
-
-                      <p class="text-muted"><%= product.description %></p>
-                      <div class="product-price">₹<%= product.price %></div>
+                      
+                      <div class="d-flex justify-content-between align-items-center mt-auto">
+                        <div class="product-price">₹<%= product.price %></div>
+                        <form action="/add-to-cart" method="POST">
+                          <input
+                            type="hidden"
+                            name="productId"
+                            value="<%= product._id %>"
+                          />
+                          <button class="add-to-cart-btn theme-button">
+                            <span>Add to Cart</span>
+                          </button>
+                        </form>
+                      </div>
                     </div>
-
-                    <form action="/add-to-cart" method="POST">
-                      <input
-                        type="hidden"
-                        name="productId"
-                        value="<%= product._id %>"
-                      />
-                      <button class="add-to-cart-btn theme-button">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span>Add to Cart</span>
-                      </button>
-                    </form>
                   </div>
                 </div>
                 <% }) %>
@@ -214,7 +204,6 @@
           const params = {};
           const urlSearchParams = new URLSearchParams(window.location.search);
 
-          // Get all regular parameters (like minPrice, maxPrice)
           for (const [key, value] of urlSearchParams.entries()) {
             if (!params[key]) {
               params[key] = value;
@@ -224,10 +213,7 @@
               params[key] = [params[key], value];
             }
           }
-
-          // Specifically get all 'category' parameters as an array
           params.category = urlSearchParams.getAll("category");
-
           return params;
         }
 
@@ -238,23 +224,18 @@
 
           for (const key in newParams) {
             const newValue = newParams[key];
-
             if (Array.isArray(newValue)) {
-              // Handle array parameters (like categories)
               const currentValues = currentSearchParams.getAll(key);
-              const newValuesSet = new Set(newValue.map(String)); // Convert to string for comparison
-
-              // Check if parameters actually changed for arrays
+              const newValuesSet = new Set(newValue.map(String));
               if (
                 currentValues.length !== newValuesSet.size ||
                 !currentValues.every((val) => newValuesSet.has(val))
               ) {
-                currentSearchParams.delete(key); // Remove all existing
-                newValue.forEach((val) => currentSearchParams.append(key, val)); // Add new ones
+                currentSearchParams.delete(key);
+                newValue.forEach((val) => currentSearchParams.append(key, val));
                 changed = true;
               }
             } else {
-              // Handle single value parameters (like minPrice, maxPrice)
               const currentValue = currentSearchParams.get(key);
               if (
                 newValue === null ||
@@ -274,10 +255,9 @@
               }
             }
           }
-
           url.search = currentSearchParams.toString();
           if (changed) {
-            window.location.href = url.toString(); // Navigates to the new URL
+            window.location.href = url.toString();
           }
         }
 
@@ -311,10 +291,8 @@
             parseFloat(urlParams.minPrice) || DEFAULT_MIN_PRICE;
           const initialMaxPrice =
             parseFloat(urlParams.maxPrice) || DEFAULT_MAX_PRICE;
-
           minInput.value = initialMinPrice;
           maxInput.value = initialMaxPrice;
-
           noUiSlider.create(slider, {
             start: [initialMinPrice, initialMaxPrice],
             connect: true,
@@ -333,18 +311,14 @@
               },
             },
           });
-
           slider.noUiSlider.on("update", function (values, handle) {
             const rawMinValue = Number(values[0].replace(/[^\d.]/g, ""));
             const rawMaxValue = Number(values[1].replace(/[^\d.]/g, ""));
-
             minDisplay.textContent = Math.round(rawMinValue);
             maxDisplay.textContent = Math.round(rawMaxValue);
-
             minInput.value = Math.round(rawMinValue);
             maxInput.value = Math.round(rawMaxValue);
           });
-
           slider.noUiSlider.on("change", function (values, handle) {
             const currentMin = Math.round(
               Number(values[0].replace(/[^\d.]/g, ""))
@@ -352,7 +326,6 @@
             const currentMax = Math.round(
               Number(values[1].replace(/[^\d.]/g, ""))
             );
-
             const urlParams = getUrlParams();
             updateUrlParams({
               ...urlParams,
@@ -370,13 +343,10 @@
         if (categoryCheckboxes.length > 0) {
           const urlParams = getUrlParams();
           const activeCategories = urlParams.category || [];
-
-          // Initialize checkboxes based on URL params
           categoryCheckboxes.forEach((checkbox) => {
             if (activeCategories.includes(checkbox.value)) {
               checkbox.checked = true;
             }
-
             checkbox.addEventListener("change", function () {
               const currentlyCheckedCategories = Array.from(categoryCheckboxes)
                 .filter((cb) => cb.checked)
@@ -397,14 +367,12 @@
           tag.setAttribute("data-filter-type", "price");
           tag.setAttribute("data-min-price", min);
           tag.setAttribute("data-max-price", max);
-
           tag.innerHTML = `
                     Rs. ${min} To Rs. ${max}
                     <button type="button" class="clear-tag" aria-label="Clear price filter">
                         &times;
                     </button>
                 `;
-
           tag
             .querySelector(".clear-tag")
             .addEventListener("click", function () {
@@ -415,7 +383,6 @@
                 maxPrice: null,
               });
             });
-
           activeFiltersContainer.appendChild(tag);
         }
 
@@ -424,14 +391,12 @@
           tag.classList.add("filter-tag");
           tag.setAttribute("data-filter-type", "category");
           tag.setAttribute("data-category-value", category);
-
           tag.innerHTML = `
                     Category: ${category}
                     <button type="button" class="clear-tag" aria-label="Clear category filter for ${category}">
                         &times;
                     </button>
                 `;
-
           tag
             .querySelector(".clear-tag")
             .addEventListener("click", function () {
@@ -444,16 +409,12 @@
                 category: updatedCategories,
               });
             });
-
           activeFiltersContainer.appendChild(tag);
         }
 
         function renderActiveFilters() {
-          activeFiltersContainer.innerHTML = ""; // Clear existing tags
-
+          activeFiltersContainer.innerHTML = "";
           const urlParams = getUrlParams();
-
-          // Render Price Filter Tag
           const minPrice = parseFloat(urlParams.minPrice);
           const maxPrice = parseFloat(urlParams.maxPrice);
           if (
@@ -463,22 +424,16 @@
           ) {
             createPriceFilterTag(Math.round(minPrice), Math.round(maxPrice));
           }
-
-          // Render Category Filter Tags
           const activeCategories = urlParams.category || [];
           activeCategories.forEach((category) => {
             createCategoryFilterTag(category);
           });
         }
-
-        // Initial render of filters on page load
         renderActiveFilters();
 
-        // Initial rendering of min/max values in display spans on page load
         const urlParamsOnLoad = getUrlParams();
         const initialMinFromURL = parseFloat(urlParamsOnLoad.minPrice);
         const initialMaxFromURL = parseFloat(urlParamsOnLoad.maxPrice);
-
         minDisplay.textContent = !isNaN(initialMinFromURL)
           ? Math.round(initialMinFromURL)
           : DEFAULT_MIN_PRICE;
