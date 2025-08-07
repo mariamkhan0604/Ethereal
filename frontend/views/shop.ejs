@@ -152,9 +152,11 @@
                           >
                             <% const isWishlisted = userWishlistProductIds &&
                             userWishlistProductIds.includes(product._id.toString()); %>
+                             <span class="heart-icon-container">
                             <i
                               class="bi <%= isWishlisted ? 'bi-heart-fill' : 'bi-heart' %>"
                             ></i>
+                            </span>
                           </button>
                         </form>
                       </div>
@@ -188,251 +190,282 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wnumb/1.2.0/wNumb.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // --- Helper Functions ---
-        function getUrlParams() {
-          const params = {};
-          const urlSearchParams = new URLSearchParams(window.location.search);
+  document.addEventListener("DOMContentLoaded", function () {
+    // --- Helper Functions ---
+    function getUrlParams() {
+      const params = {};
+      const urlSearchParams = new URLSearchParams(window.location.search);
 
-          for (const [key, value] of urlSearchParams.entries()) {
-            if (!params[key]) {
-              params[key] = value;
-            } else if (Array.isArray(params[key])) {
-              params[key].push(value);
-            } else {
-              params[key] = [params[key], value];
+      for (const [key, value] of urlSearchParams.entries()) {
+        if (!params[key]) {
+          params[key] = value;
+        } else if (Array.isArray(params[key])) {
+          params[key].push(value);
+        } else {
+          params[key] = [params[key], value];
+        }
+      }
+      params.category = urlSearchParams.getAll("category");
+      return params;
+    }
+
+    function updateUrlParams(newParams) {
+      const url = new URL(window.location.href);
+      let changed = false;
+      const currentSearchParams = new URLSearchParams(url.search);
+
+      for (const key in newParams) {
+        const newValue = newParams[key];
+        if (Array.isArray(newValue)) {
+          const currentValues = currentSearchParams.getAll(key);
+          const newValuesSet = new Set(newValue.map(String));
+          if (
+            currentValues.length !== newValuesSet.size ||
+            !currentValues.every((val) => newValuesSet.has(val))
+          ) {
+            currentSearchParams.delete(key);
+            newValue.forEach((val) => currentSearchParams.append(key, val));
+            changed = true;
+          }
+        } else {
+          const currentValue = currentSearchParams.get(key);
+          if (
+            newValue === null ||
+            newValue === undefined ||
+            newValue === ""
+          ) {
+            if (currentValue !== null) {
+              currentSearchParams.delete(key);
+              changed = true;
+            }
+          } else {
+            const newStringValue = String(newValue);
+            if (currentValue !== newStringValue) {
+              currentSearchParams.set(key, newStringValue);
+              changed = true;
             }
           }
-          params.category = urlSearchParams.getAll("category");
-          return params;
         }
+      }
+      url.search = currentSearchParams.toString();
+      if (changed) {
+        window.location.href = url.toString();
+      }
+    }
 
-        function updateUrlParams(newParams) {
-          const url = new URL(window.location.href);
-          let changed = false;
-          const currentSearchParams = new URLSearchParams(url.search);
+    // --- Elements ---
+    const slider = document.getElementById("priceSlider");
+    const minDisplay = document.getElementById("sliderMinValue");
+    const maxDisplay = document.getElementById("sliderMaxValue");
+    const minInput = document.getElementById("minPriceInput");
+    const maxInput = document.getElementById("maxPriceInput");
+    const activeFiltersContainer = document.getElementById(
+      "activeFiltersContainer"
+    );
+    const categoryCheckboxes =
+      document.querySelectorAll(".category-checkbox");
 
-          for (const key in newParams) {
-            const newValue = newParams[key];
-            if (Array.isArray(newValue)) {
-              const currentValues = currentSearchParams.getAll(key);
-              const newValuesSet = new Set(newValue.map(String));
-              if (
-                currentValues.length !== newValuesSet.size ||
-                !currentValues.every((val) => newValuesSet.has(val))
-              ) {
-                currentSearchParams.delete(key);
-                newValue.forEach((val) => currentSearchParams.append(key, val));
-                changed = true;
-              }
-            } else {
-              const currentValue = currentSearchParams.get(key);
-              if (
-                newValue === null ||
-                newValue === undefined ||
-                newValue === ""
-              ) {
-                if (currentValue !== null) {
-                  currentSearchParams.delete(key);
-                  changed = true;
-                }
-              } else {
-                const newStringValue = String(newValue);
-                if (currentValue !== newStringValue) {
-                  currentSearchParams.set(key, newStringValue);
-                  changed = true;
-                }
-              }
-            }
-          }
-          url.search = currentSearchParams.toString();
-          if (changed) {
-            window.location.href = url.toString();
-          }
-        }
+    // --- Constants for filter logic ---
+    const DEFAULT_MIN_PRICE = 0;
+    const DEFAULT_MAX_PRICE = 5000;
 
-        // --- Elements ---
-        const slider = document.getElementById("priceSlider");
-        const minDisplay = document.getElementById("sliderMinValue");
-        const maxDisplay = document.getElementById("sliderMaxValue");
-        const minInput = document.getElementById("minPriceInput");
-        const maxInput = document.getElementById("maxPriceInput");
-        const activeFiltersContainer = document.getElementById(
-          "activeFiltersContainer"
+    // --- Add to cart alert functionality ---
+    document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
+      button.addEventListener("click", function () {
+        alert("Product added to cart!");
+      });
+    });
+
+    // --- noUiSlider setup ---
+    if (slider) {
+      const urlParams = getUrlParams();
+      const initialMinPrice =
+        parseFloat(urlParams.minPrice) || DEFAULT_MIN_PRICE;
+      const initialMaxPrice =
+        parseFloat(urlParams.maxPrice) || DEFAULT_MAX_PRICE;
+      minInput.value = initialMinPrice;
+      maxInput.value = initialMaxPrice;
+      noUiSlider.create(slider, {
+        start: [initialMinPrice, initialMaxPrice],
+        connect: true,
+        step: 50,
+        tooltips: false,
+        range: {
+          min: DEFAULT_MIN_PRICE,
+          max: DEFAULT_MAX_PRICE,
+        },
+        format: {
+          to: function (value) {
+            return "₹" + Math.round(value);
+          },
+          from: function (value) {
+            return Number(value.replace(/[^\d.]/g, ""));
+          },
+        },
+      });
+      slider.noUiSlider.on("update", function (values, handle) {
+        const rawMinValue = Number(values[0].replace(/[^\d.]/g, ""));
+        const rawMaxValue = Number(values[1].replace(/[^\d.]/g, ""));
+        minDisplay.textContent = Math.round(rawMinValue);
+        maxDisplay.textContent = Math.round(rawMaxValue);
+        minInput.value = Math.round(rawMinValue);
+        maxInput.value = Math.round(rawMaxValue);
+      });
+      slider.noUiSlider.on("change", function (values, handle) {
+        const currentMin = Math.round(
+          Number(values[0].replace(/[^\d.]/g, ""))
         );
-        const categoryCheckboxes =
-          document.querySelectorAll(".category-checkbox");
+        const currentMax = Math.round(
+          Number(values[1].replace(/[^\d.]/g, ""))
+        );
+        const urlParams = getUrlParams();
+        updateUrlParams({
+          ...urlParams,
+          minPrice: currentMin,
+          maxPrice: currentMax,
+        });
+      });
+    } else {
+      console.error(
+        "Error: Price slider element (id='priceSlider') not found in the DOM."
+      );
+    }
 
-        // --- Constants for filter logic ---
-        const DEFAULT_MIN_PRICE = 0;
-        const DEFAULT_MAX_PRICE = 5000;
-
-        // --- Add to cart alert functionality ---
-        document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
-          button.addEventListener("click", function () {
-            alert("Product added to cart!");
+    // --- Category Filter Logic ---
+    if (categoryCheckboxes.length > 0) {
+      const urlParams = getUrlParams();
+      const activeCategories = urlParams.category || [];
+      categoryCheckboxes.forEach((checkbox) => {
+        if (activeCategories.includes(checkbox.value)) {
+          checkbox.checked = true;
+        }
+        checkbox.addEventListener("change", function () {
+          const currentlyCheckedCategories = Array.from(categoryCheckboxes)
+            .filter((cb) => cb.checked)
+            .map((cb) => cb.value);
+          const currentParams = getUrlParams();
+          updateUrlParams({
+            ...currentParams,
+            category: currentlyCheckedCategories,
           });
         });
-
-        // --- noUiSlider setup ---
-        if (slider) {
-          const urlParams = getUrlParams();
-          const initialMinPrice =
-            parseFloat(urlParams.minPrice) || DEFAULT_MIN_PRICE;
-          const initialMaxPrice =
-            parseFloat(urlParams.maxPrice) || DEFAULT_MAX_PRICE;
-          minInput.value = initialMinPrice;
-          maxInput.value = initialMaxPrice;
-          noUiSlider.create(slider, {
-            start: [initialMinPrice, initialMaxPrice],
-            connect: true,
-            step: 50,
-            tooltips: false,
-            range: {
-              min: DEFAULT_MIN_PRICE,
-              max: DEFAULT_MAX_PRICE,
-            },
-            format: {
-              to: function (value) {
-                return "₹" + Math.round(value);
-              },
-              from: function (value) {
-                return Number(value.replace(/[^\d.]/g, ""));
-              },
-            },
-          });
-          slider.noUiSlider.on("update", function (values, handle) {
-            const rawMinValue = Number(values[0].replace(/[^\d.]/g, ""));
-            const rawMaxValue = Number(values[1].replace(/[^\d.]/g, ""));
-            minDisplay.textContent = Math.round(rawMinValue);
-            maxDisplay.textContent = Math.round(rawMaxValue);
-            minInput.value = Math.round(rawMinValue);
-            maxInput.value = Math.round(rawMaxValue);
-          });
-          slider.noUiSlider.on("change", function (values, handle) {
-            const currentMin = Math.round(
-              Number(values[0].replace(/[^\d.]/g, ""))
-            );
-            const currentMax = Math.round(
-              Number(values[1].replace(/[^\d.]/g, ""))
-            );
-            const urlParams = getUrlParams();
-            updateUrlParams({
-              ...urlParams,
-              minPrice: currentMin,
-              maxPrice: currentMax,
-            });
-          });
-        } else {
-          console.error(
-            "Error: Price slider element (id='priceSlider') not found in the DOM."
-          );
-        }
-
-        // --- Category Filter Logic ---
-        if (categoryCheckboxes.length > 0) {
-          const urlParams = getUrlParams();
-          const activeCategories = urlParams.category || [];
-          categoryCheckboxes.forEach((checkbox) => {
-            if (activeCategories.includes(checkbox.value)) {
-              checkbox.checked = true;
-            }
-            checkbox.addEventListener("change", function () {
-              const currentlyCheckedCategories = Array.from(categoryCheckboxes)
-                .filter((cb) => cb.checked)
-                .map((cb) => cb.value);
-              const currentParams = getUrlParams();
-              updateUrlParams({
-                ...currentParams,
-                category: currentlyCheckedCategories,
-              });
-            });
-          });
-        }
-
-        // --- Filter Tag Logic ---
-        function createPriceFilterTag(min, max) {
-          const tag = document.createElement("div");
-          tag.classList.add("filter-tag");
-          tag.setAttribute("data-filter-type", "price");
-          tag.setAttribute("data-min-price", min);
-          tag.setAttribute("data-max-price", max);
-          tag.innerHTML = `
-                    Rs. ${min} To Rs. ${max}
-                    <button type="button" class="clear-tag" aria-label="Clear price filter">
-                        &times;
-                    </button>
-                `;
-          tag
-            .querySelector(".clear-tag")
-            .addEventListener("click", function () {
-              const currentParams = getUrlParams();
-              updateUrlParams({
-                ...currentParams,
-                minPrice: null,
-                maxPrice: null,
-              });
-            });
-          activeFiltersContainer.appendChild(tag);
-        }
-
-        function createCategoryFilterTag(category) {
-          const tag = document.createElement("div");
-          tag.classList.add("filter-tag");
-          tag.setAttribute("data-filter-type", "category");
-          tag.setAttribute("data-category-value", category);
-          tag.innerHTML = `
-                    Category: ${category}
-                    <button type="button" class="clear-tag" aria-label="Clear category filter for ${category}">
-                        &times;
-                    </button>
-                `;
-          tag
-            .querySelector(".clear-tag")
-            .addEventListener("click", function () {
-              const currentParams = getUrlParams();
-              const updatedCategories = (currentParams.category || []).filter(
-                (cat) => cat !== category
-              );
-              updateUrlParams({
-                ...currentParams,
-                category: updatedCategories,
-              });
-            });
-          activeFiltersContainer.appendChild(tag);
-        }
-
-        function renderActiveFilters() {
-          activeFiltersContainer.innerHTML = "";
-          const urlParams = getUrlParams();
-          const minPrice = parseFloat(urlParams.minPrice);
-          const maxPrice = parseFloat(urlParams.maxPrice);
-          if (
-            !isNaN(minPrice) &&
-            !isNaN(maxPrice) &&
-            (minPrice !== DEFAULT_MIN_PRICE || maxPrice !== DEFAULT_MAX_PRICE)
-          ) {
-            createPriceFilterTag(Math.round(minPrice), Math.round(maxPrice));
-          }
-          const activeCategories = urlParams.category || [];
-          activeCategories.forEach((category) => {
-            createCategoryFilterTag(category);
-          });
-        }
-        renderActiveFilters();
-
-        const urlParamsOnLoad = getUrlParams();
-        const initialMinFromURL = parseFloat(urlParamsOnLoad.minPrice);
-        const initialMaxFromURL = parseFloat(urlParamsOnLoad.maxPrice);
-        minDisplay.textContent = !isNaN(initialMinFromURL)
-          ? Math.round(initialMinFromURL)
-          : DEFAULT_MIN_PRICE;
-        maxDisplay.textContent = !isNaN(initialMaxFromURL)
-          ? Math.round(initialMaxFromURL)
-          : DEFAULT_MAX_PRICE;
       });
-    </script>
+    }
+
+    // --- Filter Tag Logic ---
+    function createPriceFilterTag(min, max) {
+      const tag = document.createElement("div");
+      tag.classList.add("filter-tag");
+      tag.setAttribute("data-filter-type", "price");
+      tag.setAttribute("data-min-price", min);
+      tag.setAttribute("data-max-price", max);
+      tag.innerHTML = `
+                      Rs. ${min} To Rs. ${max}
+                      <button type="button" class="clear-tag" aria-label="Clear price filter">
+                          &times;
+                      </button>
+                  `;
+      tag
+        .querySelector(".clear-tag")
+        .addEventListener("click", function () {
+          const currentParams = getUrlParams();
+          updateUrlParams({
+            ...currentParams,
+            minPrice: null,
+            maxPrice: null,
+          });
+        });
+      activeFiltersContainer.appendChild(tag);
+    }
+
+    function createCategoryFilterTag(category) {
+      const tag = document.createElement("div");
+      tag.classList.add("filter-tag");
+      tag.setAttribute("data-filter-type", "category");
+      tag.setAttribute("data-category-value", category);
+      tag.innerHTML = `
+                      Category: ${category}
+                      <button type="button" class="clear-tag" aria-label="Clear category filter for ${category}">
+                          &times;
+                      </button>
+                  `;
+      tag
+        .querySelector(".clear-tag")
+        .addEventListener("click", function () {
+          const currentParams = getUrlParams();
+          const updatedCategories = (currentParams.category || []).filter(
+            (cat) => cat !== category
+          );
+          updateUrlParams({
+            ...currentParams,
+            category: updatedCategories,
+          });
+        });
+      activeFiltersContainer.appendChild(tag);
+    }
+
+    function renderActiveFilters() {
+      activeFiltersContainer.innerHTML = "";
+      const urlParams = getUrlParams();
+      const minPrice = parseFloat(urlParams.minPrice);
+      const maxPrice = parseFloat(urlParams.maxPrice);
+      if (
+        !isNaN(minPrice) &&
+        !isNaN(maxPrice) &&
+        (minPrice !== DEFAULT_MIN_PRICE || maxPrice !== DEFAULT_MAX_PRICE)
+      ) {
+        createPriceFilterTag(Math.round(minPrice), Math.round(maxPrice));
+      }
+      const activeCategories = urlParams.category || [];
+      activeCategories.forEach((category) => {
+        createCategoryFilterTag(category);
+      });
+    }
+    renderActiveFilters();
+
+    const urlParamsOnLoad = getUrlParams();
+    const initialMinFromURL = parseFloat(urlParamsOnLoad.minPrice);
+    const initialMaxFromURL = parseFloat(urlParamsOnLoad.maxPrice);
+    minDisplay.textContent = !isNaN(initialMinFromURL)
+      ? Math.round(initialMinFromURL)
+      : DEFAULT_MIN_PRICE;
+    maxDisplay.textContent = !isNaN(initialMaxFromURL)
+      ? Math.round(initialMaxFromURL)
+      : DEFAULT_MAX_PRICE;
+  });
+
+  document.querySelectorAll(".wishlist-btn-inline").forEach((button) => {
+    button.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      const heartIcon = button.querySelector("i");
+      const isWishlisted = heartIcon.classList.contains("bi-heart-fill");
+
+      if (heartIcon.classList.contains("heart-pop-out")) {
+        return;
+      }
+
+      if (isWishlisted) {
+        heartIcon.classList.remove("bi-heart-fill");
+        heartIcon.classList.add("bi-heart");
+        this.closest("form").submit();
+      } else {
+        heartIcon.classList.add("heart-pop-out");
+        heartIcon.classList.remove("bi-heart");
+        heartIcon.classList.add("bi-heart-fill");
+
+        heartIcon.addEventListener(
+          "animationend",
+          () => {
+            this.closest("form").submit();
+            heartIcon.classList.remove("heart-pop-out");
+          },
+          { once: true }
+        );
+      }
+    });
+  });
+</script>
   </body>
 </html>
