@@ -16,13 +16,8 @@ const { storage } = require("./cloudinary");
 const upload = multer({ storage });
 const { isLoggedIn, isAdmin } = require("./utils/middleware");
 const nodemailer = require("nodemailer");
-const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(helmet());
-
-app.use(mongoSanitize());
 
 // Database connection
 console.log("MongoDB URL:", process.env.DATABASE_URL); // Debug line
