@@ -73,53 +73,57 @@
             <span class="tooltip-text">Login</span>
           </span>
        <% } else { %>
-  <div class="profile-hover-container position-relative ms-0 ms-lg-3">
-    <span class="nav-link profile-trigger">
-      <svg width="24" fill="none" viewBox="0 0 24 24">
-        <path
-          d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></path>
-        <path
-          d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-miterlimit="10"
-        ></path>
-      </svg>
-    </span>
-
-    <ul class="profile-hover-menu shadow">
-      <li class="px-3 pt-2">
-        <strong>Hello <%= currentUser.name || 'User' %></strong><br>
-        <small><%= currentUser.email || currentUser.phone %></small>
-      </li>
-      <li><hr class="dropdown-divider" /></li>
-      <li><a class="dropdown-item" href="/profile">Profile</a></li>
-      <li><a class="dropdown-item" href="/orders">Orders</a></li>
-      <li><a class="dropdown-item" href="/wishlist">Wishlist</a></li>
-      <li><a class="dropdown-item" href="/contact">Contact Us</a></li>
-      <li><hr class="dropdown-divider" /></li>
-
-      <li><a class="dropdown-item text-danger" href="/auth/logout">Logout</a></li>
-    </ul>
-  </div>
-<% } %>
-
+          <div class="profile-hover-container position-relative ms-0 ms-lg-3">
+            <span class="nav-link profile-trigger">
+              <svg width="24" fill="none" viewBox="0 0 24 24">
+                <path
+                  d="M16.125 8.75c-.184 2.478-2.063 4.5-4.125 4.5s-3.944-2.021-4.125-4.5c-.187-2.578 1.64-4.5 4.125-4.5 2.484 0 4.313 1.969 4.125 4.5Z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+                <path
+                  d="M3.017 20.747C3.783 16.5 7.922 14.25 12 14.25s8.217 2.25 8.984 6.497"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-miterlimit="10"
+                ></path>
+              </svg>
+            </span>
+    
+            <ul class="profile-hover-menu shadow">
+              <li class="px-3 pt-2">
+                <strong>Hello <%= currentUser.name || 'User' %></strong><br>
+                <small><%= currentUser.email || currentUser.phone %></small>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item" href="/profile">Profile</a></li>
+              <li><a class="dropdown-item" href="/orders">Orders</a></li>
+              <li><a class="dropdown-item" href="/wishlist">Wishlist</a></li>
+              <li><a class="dropdown-item" href="/contact">Contact Us</a></li>
+              <li><hr class="dropdown-divider" /></li>
+    
+              <li><a class="dropdown-item text-danger" href="/auth/logout">Logout</a></li>
+            </ul>
+          </div>
+        <% } %>
 
         <span class="tooltip-container">
-          <a href="/wishlist" class="nav-link ms-0 ms-lg-3">
+          <a href="/wishlist" class="nav-link ms-0 ms-lg-3 position-relative">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
+            <% if (typeof wishlistCount !== 'undefined' && wishlistCount > 0) { %>
+              <span id="wishlist-count" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">
+                <%= wishlistCount %>
+              </span>
+            <% } %>
           </a>
           <span class="tooltip-text">Wishlist</span>
         </span>
         <span class="tooltip-container">
-          <a href="/cart" class="nav-link ms-0 ms-lg-3">
+          <a href="/cart" class="nav-link ms-0 ms-lg-3 position-relative">
             <svg width="24" fill="none" viewBox="0 0 24 24">
               <path
                 d="M4.75 8.25A.75.75 0 0 0 4 9L3 19.125c0 1.418 1.207 2.625 2.625 2.625h12.75c1.418 0 2.625-1.149 2.625-2.566L20 9a.75.75 0 0 0-.75-.75H4.75Zm2.75 0v-1.5a4.5 4.5 0 0 1 4.5-4.5v0a4.5 4.5 0 0 1 4.5 4.5v1.5"
@@ -129,6 +133,11 @@
                 stroke-linejoin="round"
               ></path>
             </svg>
+            <% if (typeof cartCount !== 'undefined' && cartCount > 0) { %>
+              <span id="cart-count" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">
+                <%= cartCount %>
+              </span>
+            <% } %>
           </a>
           <span class="tooltip-text">Cart</span>
         </span>
@@ -141,14 +150,14 @@
 
 
 <% /*} else {
-          <span class="tooltip-container">
-            <a href="/auth/logout" class="nav-link ms-0 ms-lg-3">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                <path d="M16 17l5-5-5-5"></path>
-                <path d="M21 12H9"></path>
-              </svg>
-            </a>
-            <span class="tooltip-text">Logout</span>
-          </span>
-         } */%>
+    <span class="tooltip-container">
+      <a href="/auth/logout" class="nav-link ms-0 ms-lg-3">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <path d="M16 17l5-5-5-5"></path>
+          <path d="M21 12H9"></path>
+        </svg>
+      </a>
+      <span class="tooltip-text">Logout</span>
+    </span>
+    } */%>

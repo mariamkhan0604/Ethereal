@@ -15,7 +15,8 @@
         <strong><%= item.name %></strong><br>
         ₹<%= item.unit_price %> × <%= item.quantity %> = ₹<%= item.unit_price * item.quantity %>
 
-        <form action="/cart/update/<%= item.productId %>" method="post"  style="display:inline;">
+        <form action="/cart/update/<%= item.productId._id ? item.productId._id : item.productId %>" method="post" style="display:inline;">
+
             <button type="submit" name="action"  value="decrease">-</button>
             <button type="submit" name="action" value="increase">+</button>
             <button type="submit" name="action" value="remove">Remove</button>

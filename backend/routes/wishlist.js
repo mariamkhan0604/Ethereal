@@ -11,7 +11,7 @@ const Product = require("../models/Product.js");
 //render wislist items
 router.get("/wishlist", isLoggedIn, async (req, res) => {
   try {
-    const wishlist = await Wishlist.findOne({ user: req.user._id }).populate(
+    const wishlist = await Wishlist.findOne({ user: req.session.user._id }).populate(
       "products"
     );
 
@@ -30,7 +30,7 @@ router.get("/wishlist", isLoggedIn, async (req, res) => {
 
 router.post("/wishlist/:productId", isLoggedIn, async (req, res) => {
   const productId = req.params.productId;
-  const userId = req.user._id;
+  const userId = req.session.user._id; // 👈 UPDATED TO USE req.session.user._id
 
   try {
     let wishlist = await Wishlist.findOne({ user: userId });
@@ -64,7 +64,7 @@ router.post("/wishlist/:productId", isLoggedIn, async (req, res) => {
 // Remove a product from the wishlist
 router.post("/remove/:productId", isLoggedIn, async (req, res) => {
   const productId = req.params.productId;
-  const userId = req.user._id;
+  const userId = req.session.user._id; // 👈 UPDATED TO USE req.session.user._id
 
   try {
     const wishlist = await Wishlist.findOneAndUpdate(

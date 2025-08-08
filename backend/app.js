@@ -8,7 +8,7 @@ const MongoStore = require("connect-mongo");
 const mongoose = require("mongoose");
 const Product = require("./models/Product");
 const Category = require("./models/Category");
-const user = require("./models/User");
+const User = require("./models/User"); // Corrected User model import
 const flash = require("connect-flash");
 const ExpressError = require("./utils/ExpressError");
 const multer = require("multer");
@@ -16,6 +16,9 @@ const { storage } = require("./cloudinary");
 const upload = multer({ storage });
 const { isLoggedIn, isAdmin } = require("./utils/middleware");
 const nodemailer = require("nodemailer");
+const Wishlist = require("./models/wishlist");
+const Cart = require("./models/Cart"); // 👈 ADD THIS LINE
+
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
@@ -47,7 +50,7 @@ const sessionConfig = {
   }),
   cookie: {
     httpOnly: true,
-    maxAge: 1000 * 60 * 60, // 7 days
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   },
 };
 app.use(session(sessionConfig));
@@ -59,6 +62,35 @@ app.use((req, res, next) => {
   res.locals.info = req.flash("info");
   next();
 });
+
+// 👈 UPDATED MIDDLEWARE FOR CART & WISHLIST
+app.use(async (req, res, next) => {
+  if (req.session.user) {
+    try {
+      // Find the wishlist for the current user
+      const wishlist = await Wishlist.findOne({
+        user: req.session.user._id,
+      });
+      res.locals.wishlistCount = wishlist ? wishlist.products.length : 0;
+
+      // Find the cart for the current user
+      const cart = await Cart.findOne({
+          user: req.session.user._id,
+      });
+      res.locals.cartCount = cart ? cart.items.length : 0;
+    } catch (err) {
+      console.error("Error fetching counts:", err);
+      res.locals.wishlistCount = 0;
+      res.locals.cartCount = 0;
+    }
+  } else {
+    // If no user is logged in, both counts are 0
+    res.locals.wishlistCount = 0;
+    res.locals.cartCount = 0;
+  }
+  next();
+});
+
 const mainRoutes = require("./routes/main_routes");
 const authRoutes = require("./routes/auth");
 const cartRoutes = require("./routes/cart");
@@ -76,6 +108,16 @@ app.use("/", forgetPassRoutes);
 app.use("/", profileRoutes);
 app.use("/", orderRoutes);
 app.use("/", directAddRoutes);
+
+app.get("/product/:id", async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id).populate("category");
+  if (!product) {
+    req.flash("error", "Product not found");
+    return res.redirect("/shop");
+  }
+  res.render("product_show", { product });
+});
 app.get("/products", isLoggedIn, isAdmin, async (req, res) => {
   try {
     const categories = await Category.find({});
@@ -120,18 +162,6 @@ app.post(
 app.post("/contact", async (req, res) => {
   const { name, email, subject, message } = req.body;
 
-
-app.get("/product/:id", async (req, res) => {
-  const { id } = req.params;
-  const product = await Product.findById(id).populate("category");
-  if (!product) {
-    req.flash("error", "Product not found");
-    return res.redirect("/shop");
-  }
-  res.render("product_show", { product });
-});
-
-
   let transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -162,11 +192,6 @@ app.get("/product/:id", async (req, res) => {
     res.redirect("/contact");
   }
 });
-
-// app.get('/shop',async(req,res)=>{
-//   const products = await Product.find({});
-//   res.render('shop',{ products, currentPage: 'shop' });
-// })
 
 app.all(/(.*)/, (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));

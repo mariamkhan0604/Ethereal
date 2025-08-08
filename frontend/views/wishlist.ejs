@@ -20,11 +20,13 @@
         <div class="card-body">
           <h5 class="card-title"><%= product.name %></h5>
           <p class="card-text">₹<%= product.price %></p>
-          <form action="/remove/<%= product._id %>" method="POST">
-            <button type="submit" class="btn btn-outline-danger">
-              <i class="fas fa-heart-broken"></i> Remove from Wishlist
-            </button>
-          </form>
+          <div class="d-flex justify-content-end">
+  <form action="/remove/<%= product._id %>" method="POST">
+    <button type="submit" class="btn btn-outline-danger">
+      <i class="fas fa-heart-broken"></i> Remove
+    </button>
+  </form>
+</div>
         </div>
       </div>
     </div>

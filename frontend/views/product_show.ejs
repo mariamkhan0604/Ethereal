@@ -1,7 +1,10 @@
 <% layout('layout') -%>
-
+          <div class="flash-container-wrapper">
+  <div class="flash-product"><%- include('./partials/flash') %></div>
+</div>
 <section class="product-details-section">
   <div class="product-details-container">
+
     <!-- Product Image -->
     <div class="product-image">
       <img src="<%= product.images[0].url %>" alt="<%= product.name %>" />
@@ -12,7 +15,7 @@
     <div class="product-content">
       <!-- Flash Message Block -->
 
-      <div class="flash-container"><%- include('./partials/flash') %></div>
+
 
       <h2><%= product.name %></h2>
       <p class="product-description"><%= product.description %></p>

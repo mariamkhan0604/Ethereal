@@ -5,6 +5,12 @@
     display: flex;
     justify-content: center;
   }
+.flash-product{
+width: 53%;
+margin-top: 70px;
+  margin-left: 450px;
+  margin-bottom: 0px;
+}
 
   .product-details-container {
     background-color: #fff;
